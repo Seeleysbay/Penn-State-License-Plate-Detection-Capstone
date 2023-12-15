@@ -1,7 +1,7 @@
 # Penn-State-License-Plate-Detection-Capstone
 2024 Penn State Harrisburg Capstone Project
 
-App Name:PLATES (Plate Logger and Tage Examiner System)
+App Name: PLATES (Plate Logger and Tage Examiner System)
 
 Group Members: Ryan Brennan, Tyler Wallace, Alan Baxley, Brendan Gaffney, Jeffrey Tetkoskie
 
