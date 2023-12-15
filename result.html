@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>License Plate Number</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Recognized License Plate Number:</h1>
+        <p class="plate-numbers">{{ plate_numbers }}</p>
+        <div class="image-container">
+            <!-- Update the src attribute to use the uploaded_file route -->
+            <img src="{{ url_for('uploaded_file', filename=filename) }}" alt="Uploaded License Plate" class="uploaded-image"/>
+        </div>
+        <a href="{{ url_for('upload_file') }}" class="try-again-link">Try another image</a>
+    </div>
+</body>
+</html>
