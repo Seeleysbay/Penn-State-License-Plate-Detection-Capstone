@@ -1,0 +1,51 @@
+/* Add your existing styles here, if any */
+
+/* Reset the button styles to be more in line with the example */
+.btn-custom {
+    background-color: #ffffff; /* White background */
+    color: #333333; /* Dark text color */
+    border: 1px solid #cccccc; /* Light grey border */
+    padding: 0.375rem 0.75rem; /* Similar padding to the example */
+    font-size: 1rem; /* Standard font size */
+    line-height: 1.5;
+    border-radius: 0.25rem; /* Rounded corners, but not too much */
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out; /* Smooth transition for hover effects */
+}
+
+/* Hover effect for buttons */
+.btn-custom:hover {
+    background-color: #ffa500; /* Orange background on hover */
+    border-color: #ffa500; /* Orange border on hover */
+    color: #ffffff; /* White text color on hover */
+}
+
+/* Center the button container */
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px; /* Space between buttons */
+}
+
+/* GitHub icon styling */
+.elsewhere-link {
+    display: inline-block; /* Needed to center the icon */
+    text-decoration: none; /* No underline */
+}
+
+.github-icon {
+    fill: #ffa500; /* Orange GitHub icon color */
+    transition: fill 0.2s ease-in-out; /* Smooth fill transition for hover effects */
+}
+
+/* Center the GitHub icon */
+.center-icon {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px; /* Adjust the top margin as needed */
+}
+
+/* Style for the SVG icons */
+.elsewhere-icon {
+    height: 32px; /* Adjust the size as needed */
+    fill: currentColor;
+}

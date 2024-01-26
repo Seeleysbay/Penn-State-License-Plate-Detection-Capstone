@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="jumbotron">
+    <h1 class="display-4">Welcome to the OCR License Plate Reader</h1>
+    <p class="lead">This web application allows users to upload images of license plates and utilizes OCR (Optical Character Recognition) to extract and display the text. The purpose of this project is to demonstrate the capabilities of OCR technology in recognizing text from various license plate designs and conditions.</p>
+    <hr class="my-4">
+    <p>Start by uploading a license plate image to see OCR in action, or view the database of processed images.</p>
+
+    <div class="button-container">
+        <a class="btn btn-custom" href="{{ url_for('upload') }}" role="button">Upload License Plate</a>
+        <a class="btn btn-custom" href="{{ url_for('database') }}" role="button">View Database</a>
+    </div>
+
+    <!-- GitHub Icon -->
+    <div class="center-icon">
+        <a href="https://github.com/Seeleysbay/Penn-State-License-Plate-Detection-Capstone" class="elsewhere-link" target="_blank" rel="me">
+            <svg class="github-icon" aria-label="Github" role="img" viewBox="0 0 16 16" width="32" height="32">
+                <!-- SVG path for GitHub icon -->
+                <path fill-rule="evenodd" d="..." fill="#ffa500"></path> <!-- Replace "..." with your SVG path -->
+            </svg>
+        </a>
+    </div>
+</div>
+{% endblock %}

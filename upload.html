@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload License Plate Image</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding-top: 70px;
+        }
+        .navbar {
+            background-color: #333;
+            justify-content: center; /* Center the navbar content */
+        }
+        .navbar-brand {
+            color: white;
+        }
+        .container {
+            max-width: 600px;
+            margin-top: 50px;
+            text-align: center; /* Center align the container content */
+        }
+        h1 {
+            margin-bottom: 25px;
+        }
+        .btn-custom {
+            background-color: #ffffff;
+            color: #333;
+            border: 1px solid #cccccc;
+            transition: background-color 0.3s ease;
+            margin-top: 20px; /* Additional spacing */
+        }
+        .btn-custom:hover, .btn-custom:focus {
+            background-color: #ffa500;
+            color: #333;
+        }
+        .back-link {
+            display: block; /* Make the back link a block to center it */
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        .custom-file {
+            margin-bottom: 20px; /* Spacing below the file input */
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <a class="navbar-brand" href="/">OCR License Plate Reader</a>
+    </nav>
+
+    <!-- Upload Form Section -->
+    <div class="container">
+        <h1>Upload License Plate Image</h1>
+        <p>Select an image file with a license plate to perform OCR.</p>
+
+        <form action="/uploader" method="post" enctype="multipart/form-data">
+            <div class="custom-file">
+                <input type="file" class="custom-file-input" id="imageUpload" name="image" required>
+                <label class="custom-file-label" for="imageUpload">Choose image to upload</label>
+            </div>
+            <button type="submit" class="btn btn-custom btn-block">Upload</button>
+        </form>
+
+        <a href="/" class="back-link">&larr; Back to Home</a>
+    </div>
+
+    <!-- Bootstrap Scripts -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <!-- Script to update the file input label text when a file is chosen -->
+    <script>
+        $('.custom-file-input').on('change', function() {
+            let fileName = $(this).val().split('\\').pop();
+            $(this).next('.custom-file-label').addClass("selected").html(fileName);
+        });
+    </script>
+</body>
+</html>

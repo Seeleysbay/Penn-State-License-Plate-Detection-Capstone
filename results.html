@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>OCR Results</title>
+</head>
+<body>
+    <h2>Processed Image</h2>
+    <!-- Update the src attribute to fetch the image from the static directory -->
+   <img src="{{ url_for('static', filename=image_path) }}" alt="Processed Image">
+</body>
+</html>
