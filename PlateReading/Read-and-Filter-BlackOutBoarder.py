@@ -95,3 +95,25 @@ for detection in ocr_results:
         # Draw rectangles around the text
         img = cv2.rectangle(img, top_left, bottom_right, color, 2)
 
+
+# Display the image with annotations
+cv2.imshow("img", img)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+
+# Initialize an empty string to hold all texts
+all_texts = ""
+
+for detection in ocr_results:
+    text = detection[1]  # The text is the second element in the tuple
+    all_texts += text + " "  # Concatenate each text with a space
+
+# Trim any extra space at the end and print the result
+all_texts = all_texts.strip().upper()
+print("All Detected Texts:", all_texts)
+
+# Print the plate number
+print("Plate Number:", plate_number)
+state_name = find_state_name(all_texts)
+print("State:", state_name)
+
