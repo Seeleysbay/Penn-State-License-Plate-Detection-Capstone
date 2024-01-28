@@ -1,3 +1,8 @@
+'''
+Description:
+Reads and filters the plate image uploaded on the flask website wile making a 
+red box around the plate number and green boxes around additional text.
+'''
 
 @app.route('/uploader', methods=['POST'])
 def upload_file():
