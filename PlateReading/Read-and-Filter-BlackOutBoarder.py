@@ -50,3 +50,48 @@ reader = easyocr.Reader(['en'])
 
 # Define the path to the image
 image_path = "REPLACE-WITH-FILE-PATH.jpg"
+
+
+# Read in the image and perform OCR
+img = cv2.imread(image_path)
+ocr_results = reader.readtext(image_path)
+
+# Set a confidence threshold for OCR results
+confidence_threshold = 0.2
+
+# Initialize variables for the largest bounding box
+largest_area = 0
+largest_box = None
+largest_text = ""
+plate_number = ""  # Variable to store the plate number
+
+# Find the largest bounding box
+for detection in ocr_results:
+    if detection[2] > confidence_threshold:
+        # Calculate the area of the bounding box
+        top_left = tuple([int(value) for value in detection[0][0]])
+        bottom_right = tuple([int(value) for value in detection[0][2]])
+        area = (bottom_right[0] - top_left[0]) * (bottom_right[1] - top_left[1])
+
+        if area > largest_area:
+            largest_area = area
+            largest_box = detection[0]
+            largest_text = detection[1]
+            plate_number = detection[1]  # Store the text of the largest bounding box
+
+# Process each detection and draw rectangles
+for detection in ocr_results:
+    if detection[2] > confidence_threshold:
+        top_left = tuple([int(value) for value in detection[0][0]])
+        bottom_right = tuple([int(value) for value in detection[0][2]])
+        text = detection[1]
+
+        # Check if it's the largest box
+        if detection[0] == largest_box:
+            color = (0, 0, 255)  # Red color for the largest box
+        else:
+            color = (0, 255, 0)  # Green color for other boxes
+
+        # Draw rectangles around the text
+        img = cv2.rectangle(img, top_left, bottom_right, color, 2)
+
