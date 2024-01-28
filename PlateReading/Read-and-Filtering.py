@@ -31,5 +31,23 @@ def find_state_name(input_string):
             # Return the rest of the string without the state and the state separately
             return matchingState
 
-    # If no state found return none/null
+# If no state found return none/null
     return None
+# Initialize EasyOCR reader for English language
+reader = easyocr.Reader(['en'])
+
+# Define the path to the image
+image_path = "REPLACE-WITH-FILEPATH.jpg"
+
+# Read in the image and perform OCR
+img = cv2.imread(image_path)
+ocr_results = reader.readtext(image_path)
+
+# Set a confidence threshold for OCR results
+confidence_threshold = 0.2
+
+# Initialize variables for the largest bounding box
+largest_area = 0
+largest_box = None
+largest_text = ""
+plate_number = ""  # Variable to store the plate number
