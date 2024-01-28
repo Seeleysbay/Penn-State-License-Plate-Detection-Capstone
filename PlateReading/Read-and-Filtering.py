@@ -1,6 +1,6 @@
 '''
 Description: 
-This code uses EasyOCR and OpenCV to make the bounding boxes and pull the sext from the plate. 
+This code uses EasyOCR and OpenCV to make the bounding boxes and pull the text from the plate. 
 Once the bounding boxes are made the largest bounding box is identified and then the color is turned red. 
 Since the plate number will always be the largest boundng box on the plate the text from this box is used to 
 obtain the plate number. Then all of the text found is stored in a string which we eventually use to find 
