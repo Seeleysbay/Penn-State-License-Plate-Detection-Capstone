@@ -1,3 +1,8 @@
+'''
+Description: 
+This code uses EasyOCR and OpenCV to read the text from a webcam
+'''
+
 import cv2
 import easyocr
 
