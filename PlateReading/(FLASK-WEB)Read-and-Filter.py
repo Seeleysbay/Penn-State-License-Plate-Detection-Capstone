@@ -1,6 +1,6 @@
 '''
 Description:
-Reads and filters the plate image uploaded on the flask website wile making a 
+Reads and filters the plate image uploaded on the flask website while making a 
 red box around the plate number and green boxes around additional text.
 '''
 
