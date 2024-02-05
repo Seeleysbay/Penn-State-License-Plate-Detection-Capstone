@@ -81,8 +81,21 @@ dependencies {
     implementation("androidx.camera:camera-extensions:$cameraxVersion")
 
     // ML Kit
-    implementation("com.google.android.gms:play-services-mlkit-text-recognition:19.0.0") //text recognition
+    implementation("com.google.mlkit:text-recognition:16.0.0") //text recognition
     implementation("com.google.mlkit:image-labeling:17.0.7") //image labeling
     implementation("com.google.mlkit:object-detection:17.0.0") //object detection
+
+    // Tensorflow lite
+    implementation ("org.tensorflow:tensorflow-lite:2.14.0")
+    implementation ("org.tensorflow:tensorflow-lite-select-tf-ops:2.14.0")
+    implementation("org.tensorflow:tensorflow-lite-task-vision:0.4.4")
+    implementation("org.tensorflow:tensorflow-lite-gpu-delegate-plugin:0.4.4")
+    implementation("org.tensorflow:tensorflow-lite-gpu:2.14.0")
+
+    // LevenshteinDistance
+    implementation ("org.apache.commons:commons-text:1.11.0")
+
+
+
 
 }
