@@ -14,6 +14,7 @@ import android.graphics.ColorMatrix
 import android.graphics.Paint
 import com.example.parkingpermitapp.domain.LevenshteinResult
 import org.apache.commons.text.similarity.LevenshteinDistance
+import com.example.parkingpermitapp.data.GenericOCR
 
 
 //****************************************************
@@ -44,8 +45,10 @@ class TextExtraction(private val bitmap: Bitmap) {
         Log.d("Image Dimensions","MLKIT image width: ${image.width}, MLKIT image height: ${image.height}")
         recognizer.process(image)
             .addOnSuccessListener { result ->
-                //find line with largest bounding box
-                val output = getOutPutText(result)
+                //result contains all text in image, output will contain text after post OCR processing
+                val generic = GenericOCR();
+                val output = generic.getOutPutText(result)
+                //val output = getOutPutText(result)
                 onResult(output)
             }
             .addOnFailureListener { e ->
@@ -72,6 +75,9 @@ class TextExtraction(private val bitmap: Bitmap) {
     // checks the first and last line for the state.         *
     // Returns the plate number followed by a space and      *
     // the state in upper case.                              *
+    // For API purposes, might make a seperate class for     *
+    // this function, easier for other projects to use w/    *
+    // ML Kit                                                *
     //********************************************************
     private fun getOutPutText( result: Text): String {
         var largestHeight = 0   // to find the line bounding box with greatest height
@@ -194,9 +200,7 @@ class TextExtraction(private val bitmap: Bitmap) {
             "NEW YORK" to "NEW YORK",
             "YORK" to "NEW YORK",
             "NORTH CAROLINA" to "NORTH CAROLINA",
-            "NORTHCAROLINA" to "NORTH CAROLINA",//
             "NORTH DAKOTA" to "NORTH DAKOTA",
-            "NORTHDAKOTA" to "NORTH DAKOTA",//
             "OHIO" to "OHIO",
             "OKLAHOMA" to "OKLAHOMA",
             "OREGON" to "OREGON",
