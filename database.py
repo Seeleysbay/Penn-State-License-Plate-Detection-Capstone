@@ -54,7 +54,7 @@ def load_all_unregistered_from_db():
 
 def load_registered_from_db(PlateNum):
     with engine.connect() as conn:
-        result_Register = conn.execute(text("select * from Registered where PlateNum = :val", val=PlateNum))
+        result_Register = conn.execute(text("select * from Registration where PlateNum = :val", val=PlateNum))
 
         findings = result_Register.all()
         if len(findings) == 0:
