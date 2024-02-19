@@ -1,12 +1,13 @@
-from flask import Flask, request, render_template, send_from_directory, redirect, url_for
+import Templates
+from flask import Flask, request, render_template, send_from_directory
+from database import load_all_registered_from_db, add_register_to_db
 import easyocr
 import cv2
 import numpy as np
 import io
 import os
-from datetime import datetime
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='Templates')
 
 # Initialize EasyOCR reader
 reader = easyocr.Reader(['en'])
@@ -14,58 +15,28 @@ reader = easyocr.Reader(['en'])
 
 @app.route('/')
 def index():
-    return render_template('home.html', title='Home', current_year=datetime.now().year)
+    return render_template('home.html')
 
 
 @app.route('/database')
 def database():
-    # Placeholder for the database page
-    return render_template('database.html')
+    data = load_all_registered_from_db()
+    return render_template('database.html', data=data)
 
 
-def find_state_name(input_string):
+@app.route('/AddRegister', methods=['POST', 'GET'])
+def register():
+    if request.method == 'POST':
+        data = request.form
+        add_register_to_db(data)
+    data = load_all_registered_from_db()
+    return render_template('AddRegister.html',  data=data)
 
-    listofstates = [
-        "ALABAMA", "ALASKA", "ARIZONA", "ARKANSAS", "CALIFORNIA",
-        "COLORADO", "CONNECTICUT", "DELAWARE", "FLORIDA", "GEORGIA",
-        "HAWAII", "IDAHO", "ILLINOIS", "INDIANA", "IOWA",
-        "KANSAS", "KENTUCKY", "LOUISIANA", "MAINE", "MARYLAND",
-        "MASSACHUSETTS", "MICHIGAN", "MINNESOTA", "MISSISSIPPI", "MISSOURI",
-        "MONTANA", "NEBRASKA", "NEVADA", "NEW HAMPSHIRE", "NEW JERSEY",
-        "NEW MEXICO", "NEW YORK", "NORTH CAROLINA", "NORTH DAKOTA", "OHIO",
-        "OKLAHOMA", "OREGON", "PENNSYLVANIA", "RHODE ISLAND", "SOUTH CAROLINA",
-        "SOUTH DAKOTA", "TENNESSEE", "TEXAS", "UTAH", "VERMONT",
-        "VIRGINIA", "WASHINGTON", "WEST VIRGINIA", "WISCONSIN", "WYOMING"
-    ]
-
-    # Remove a substring from the sting read from the plate
-    def remove_substring(original_string, substring_to_remove):
-        return original_string.replace(substring_to_remove, '')
-
-    # Use a loop to see if a stat is in the string
-    for state in listofstates:
-        if state in input_string:
-            matchingState = state
-            # Take that state name out (so it is not confused for a plate number)
-            input_string = remove_substring(input_string, matchingState)
-
-            # Return the rest of the string without the state and the state separately
-            return matchingState
-
-    # If no state found return none/null
-    return None
 
 @app.route('/upload')
 def upload():
-    # Get the processed image and other details if they are present in the query parameters
-    processed_image = request.args.get('processed_image', None)
-    plate_number = request.args.get('plate_number', None)
-    state_name = request.args.get('state', None)
-
-    # Render the page with the upload form and include the processed image if it's present
-    return render_template('upload.html', processed_image=processed_image,
-                           plate_number=plate_number, state_name=state_name)
-
+    # Render the page with the upload form
+    return render_template('upload.html')
 
 
 @app.route('/uploader', methods=['POST'])
@@ -84,45 +55,42 @@ def upload_file():
 
                 # Perform OCR and process the image
                 ocr_results = reader.readtext(img, detail=1)
-
-                # Initialize variables for the largest bounding box
-                largest_area = 0
-                plate_number = ""  # Variable to store the plate number
-                mask = np.zeros_like(img)  # Create a black mask of the same size as the image
-
-                # Find the largest bounding box and fill the mask
                 for detection in ocr_results:
                     if detection[2] > 0.2:  # Confidence threshold
                         top_left = tuple([int(val) for val in detection[0][0]])
                         bottom_right = tuple([int(val) for val in detection[0][2]])
-                        area = (bottom_right[0] - top_left[0]) * (bottom_right[1] - top_left[1])
+                        text = detection[1]
 
-                        if area > largest_area:
-                            largest_area = area
-                            plate_number = detection[1]
-                            cv2.rectangle(mask, top_left, bottom_right, (255, 255, 255), -1)
+                        # Calculate the size of the text box
+                        font_scale = 0.4  # Adjust font scale as needed
+                        thickness = 1  # Adjust thickness as needed
+                        (text_width, text_height), baseline = cv2.getTextSize(text, cv2.FONT_HERSHEY_SIMPLEX,
+                                                                              font_scale, thickness)
 
-                # Apply the mask to the original image
-                result = cv2.bitwise_and(img, mask)
+                        # Calculate the position for text background
+                        bg_top_left = (top_left[0], top_left[1] - text_height - baseline - 3)
+                        bg_bottom_right = (bg_top_left[0] + text_width + 6, top_left[1] + 3)
+
+                        # Draw a filled rectangle as a background for text
+                        img = cv2.rectangle(img, bg_top_left, bg_bottom_right, (0, 0, 0), cv2.FILLED)
+
+                        # Draw the text
+                        text_org = (top_left[0] + 3, top_left[1] - baseline)
+                        img = cv2.putText(img, text, text_org, cv2.FONT_HERSHEY_SIMPLEX, font_scale, (255, 255, 255),
+                                          thickness)
+
+                        # Draw the bounding box
+                        img = cv2.rectangle(img, top_left, bottom_right, (0, 255, 0), 2)
 
                 # Save the processed image
-                processed_image_path = 'processed_image.jpg'
-                cv2.imwrite(os.path.join('static', processed_image_path), result)
+                processed_image_path = 'static/processed_image.jpg'
+                cv2.imwrite(processed_image_path, img)
 
-                # Find the state name
-                all_texts = " ".join([detection[1] for detection in ocr_results]).strip().upper()
-                state_name = find_state_name(all_texts)
-
-                # Redirect to the upload page with the processed image path
-                # and any additional information you want to display
-                return redirect(url_for('upload', processed_image=processed_image_path,
-                                        plate_number=plate_number,
-                                        state=state_name if state_name else "No state found"))
+                return render_template('results.html', image_path='processed_image.jpg')
 
     except Exception as e:
         print(f"An error occurred: {e}")
         return f"An error occurred: {e}"
-
 
 
 @app.route('/static/<filename>')
