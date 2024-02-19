@@ -1,9 +1,8 @@
-<!-- database.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Database</title>
+    <title>Add User to Register</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <style>
         table {
@@ -21,7 +20,7 @@
     </style>
 </head>
 <body>
-    <div class="container mt-5">
+    <div>
         <h1>Database</h1>
         <table>
             <thead>
@@ -43,13 +42,32 @@
 
                 {% endfor %}
             </tbody>
-        </table>
+        </table> <br>
 
-        <a href="/AddRegister" class="btn btn-secondary">Add To Register</a>
+        <form method="POST" action="/AddRegister" >
+            <div class="m-2">
+                <label>ID#: </label><br>
+                <input type="text" name="ID#" placeholder="12345"><br>
+            </div>
 
+            <div class="m-2">
+                <label>Plate#: </label><br>
+                <input type="text" name="Plate#" placeholder="ABC1354"><br>
+            </div>
 
+            <div class="m-2">
+                <label>State: </label><br>
+                <input type="text" name="State" placeholder="Pennsylvania"><br>
+            </div>
 
-        <a href="/" class="btn btn-secondary">Go Back</a>
+            <div class="m-2">
+                <label>Email: </label><br>
+                <input type="text" name="Email" placeholder="abc@psu.edu"><br>
+            </div>
+            <button type="submit" class="btn btn-secondary">Add to Register </button>
+        </form>
+        <a href="/database" class="btn btn-secondary">Cancel</a>
     </div>
+
 </body>
 </html>
