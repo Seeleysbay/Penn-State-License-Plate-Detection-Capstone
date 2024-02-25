@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="generator" content="Hugo 0.58.2" />
+    <title>PennState Plates</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <link rel="alternate" type="application/rss+xml" href="https://pennstateplates.com/index.xml" title="PennState Plates">
+    <link rel="authorization_endpoint" href="https://indieauth.com/auth">
+    <link rel="token_endpoint" href="https://tokens.indieauth.com/token">
+    <link rel="microsub" href="https://aperture.p3k.io/microsub/205">
+</head>
+<body>
+    <header>
+        <h1>$ ❯ PennState Plates</h1>
+        <div class="site-description">Simplifying the parking permit process.</div>
+        <nav class="main-nav">
+            <ul>
+                <li><a class="nav-button" href="{{ url_for('home') }}">Home</a></li>
+                <li><a class="nav-button" href="{{ url_for('about') }}">About</a></li>
+                <li><a class="nav-button" href="{{ url_for('demo') }}">Demo</a></li>
+                <li><a class="nav-button" href="{{ url_for('database') }}">Database</a></li>
+                <li><a class="nav-button" href="{{ url_for('changelog') }}">Changelog</a></li>
+            </ul>
+        </nav>
+    </header>
+
+<main>
+    <article class="h-entry content-box">
+        <h2>Database</h2>
+        <!-- Your database table -->
+        <table>
+            <thead>
+                <tr>
+                    <th>IDNum</th>
+                    <th>PlateNum</th>
+                    <th>PlateState</th>
+                    <th>Email</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in data %}
+                <tr>
+                    <td>{{ row[0] }}</td>
+                    <td>{{ row[1] }}</td>
+                    <td>{{ row[2] }}</td>
+                    <td>{{ row[3] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Add Register Form -->
+        <div class="add-register-form">
+            <h3>Add User to Register</h3>
+            <form method="POST" action="{{ url_for('register') }}">
+
+                <label for="idNum">ID#:</label>
+                <input type="text" id="idNum" name="ID#" placeholder="12345" required>
+
+                <label for="plateNum">Plate#:</label>
+                <input type="text" id="plateNum" name="Plate#" placeholder="ABC1354" required>
+
+                <label for="state">State:</label>
+                <input type="text" id="state" name="State" placeholder="Pennsylvania" required>
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="Email" placeholder="abc@psu.edu" required>
+
+                <input type="submit" value="Add to Register">
+            </form>
+        </div>
+    </article>
+</main>
+
+
+    <footer>
+        &copy; {{ current_year }} PennState Plates.
+    </footer>
+
+    <!-- Your script tags would go here if you have any -->
+</body>
+</html>

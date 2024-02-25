@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload License Plate Image</title>
+    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="generator" content="Hugo 0.58.2" />
+    <title>PennState Plates</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <link rel="alternate" type="application/rss+xml" href="https://pennstateplates.com/index.xml" title="PennState Plates">
+    <link rel="authorization_endpoint" href="https://indieauth.com/auth">
+    <link rel="token_endpoint" href="https://tokens.indieauth.com/token">
+    <link rel="microsub" href="https://aperture.p3k.io/microsub/205">
+</head>
+<body>
+    <header>
+        <h1>$ ❯ PennState Plates</h1>
+        <div class="site-description">Simplifying the parking permit process.</div>
+        <nav class="main-nav">
+            <ul>
+                <li><a class="nav-button" href="{{ url_for('home') }}">Home</a></li>
+                <li><a class="nav-button" href="{{ url_for('about') }}">About</a></li>
+                <li><a class="nav-button" href="{{ url_for('demo') }}">Demo</a></li>
+                <li><a class="nav-button" href="{{ url_for('database') }}">Database</a></li>
+                <li><a class="nav-button" href="{{ url_for('changelog') }}">Changelog</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+    <article class="h-entry content-box">
+        <h3>Demo: License Plate Recognition</h3>
+        <p>Upload an image of a license plate to see the OCR in action.</p>
+        <form action="{{ url_for('upload_file') }}" method="post" enctype="multipart/form-data">
+            <input type="file" name="image" required>
+            <input type="submit" value="Upload and Analyze">
+        </form>
+        {% if processed_image %}
+            <div class="result-display">
+                <h3>Processed Image:</h3>
+                <img src="{{ url_for('static', filename=processed_image) }}" alt="Processed Image">
+                <p>Plate Number: {{ plate_number }}</p>
+                <p>State: {{ state_name }}</p>
+            </div>
+        {% endif %}
+    </article>
+</main>
+
+
+    <footer>
+        &copy; {{ current_year }} PennState Plates.
+    </footer>
+
+    <script>
+        // If you have any JavaScript, it would go here.
+    </script>
+</body>
+</html>

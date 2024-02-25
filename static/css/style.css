@@ -1,0 +1,81 @@
+:root {
+  color: #F5F5F5;
+}
+
+a {
+  text-decoration: none;
+}
+
+article a h3 {
+  margin: 0;
+}
+
+article.h-entry {
+  margin: 1rem auto;
+}
+.elsewhere-link {
+  margin-right: 5px;
+}
+.elsewhere-icon {
+  fill: var(--accent);
+  margin: 0 6px;
+}
+
+nav.paginator {
+  text-align: center;
+}
+
+nav.tags {
+  margin: 0.5rem 0 0 0;
+}
+
+.author-image-container .u-photo {
+	display: block;
+	margin: 5px auto;
+}
+
+.content-box {
+    text-align: center; /* Centers the content of the box */
+}
+
+.content-box form {
+    display: inline-block; /* Allows for the form to be centered */
+    text-align: left; /* Aligns form elements to the left within the centered form */
+    margin-top: 1em; /* Adds some space above the form */
+}
+
+.content-box form input[type="submit"] {
+    display: block; /* Makes the submit input a block element */
+    margin: 1em auto; /* Centers the button horizontally within the form */
+    padding: 0.5em 1em; /* Adds some padding to the button for better aesthetics */
+}
+
+.result-display {
+    margin-top: 2em;
+    padding: 1em;
+    border: 1px solid #ddd;
+    background: #f9f9f9;
+    border-radius: 8px;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+footer {
+    text-align: center;
+    padding: 1em 0;
+}
+.form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.submit-btn {
+    margin-top: 1em; /* Adjust as needed */
+}
+
