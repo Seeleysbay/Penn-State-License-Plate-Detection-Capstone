@@ -141,12 +141,20 @@ def find_state_name(input_string):
     return None
 
 @app.route('/AddRegister', methods=['POST', 'GET'])
-def register():
+def add_register():
     if request.method == 'POST':
         data = request.form
         add_register_to_db(data)
     data = load_all_registered_from_db()
-    return render_template('database.html',  data=data)
+    return render_template('AddRegister.html', data=data)
+
+@app.route('/RemoveRegister', methods=['POST', 'GET'])
+def remove_register():
+    if request.method == 'POST':
+        data = request.form
+        delete_register_from_db(data)
+    data = load_all_registered_from_db()
+    return render_template('RemoveRegister.html', data=data)
 
 @app.route('/static/<filename>')
 def static_file(filename):
