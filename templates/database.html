@@ -58,19 +58,41 @@
             <h3>Add User to Register</h3>
             <form method="POST" action="{{ url_for('register') }}">
 
-                <label for="idNum">ID#:</label>
-                <input type="text" id="idNum" name="ID#" placeholder="12345" required>
+         
+                <label>ID#: </label><br>
+                <input type="text" name="ID#" placeholder="12345" required><br>
+            
+             
+                <label>Name: </label><br>
+                <input type="text" name="Name" placeholder="Henry Johnson" required><br>
+            
 
-                <label for="plateNum">Plate#:</label>
-                <input type="text" id="plateNum" name="Plate#" placeholder="ABC1354" required>
-
-                <label for="state">State:</label>
-                <input type="text" id="state" name="State" placeholder="Pennsylvania" required>
-
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="Email" placeholder="abc@psu.edu" required>
+                <label>Plate#: </label><br>
+                <input type="text" name="Plate#" placeholder="ABC1354" required><br>
+            
+            
+                <label>State: </label><br>
+                <input type="text" name="State" placeholder="PA" required><br>
+            
+             
+                <label>Vehicle-Make: </label><br>
+                <input type="text" name="Make" placeholder="Chevy" required><br>
+           
+             
+                <label>Vehicle-Model: </label><br>
+                <input type="text" name="Model" placeholder="Camaro" required><br>
+           
+             
+                <label>PersonType: </label><br>
+                <input type="text" name="PersonType" placeholder="Faculty or Student" required><br>
+            
+            
+                <label>Email: </label><br>
+                <input type="text" name="Email" placeholder="abc@psu.edu" required><br>
 
                 <input type="submit" value="Add to Register">
+                <input type="submit" value="Remove from Register">
+                
             </form>
         </div>
     </article>
