@@ -146,7 +146,7 @@ def add_register():
         data = request.form
         add_register_to_db(data)
     data = load_all_registered_from_db()
-    return render_template('AddRegister.html', data=data)
+    return render_template('database.html', data=data)
 
 @app.route('/RemoveRegister', methods=['POST', 'GET'])
 def remove_register():
@@ -154,7 +154,7 @@ def remove_register():
         data = request.form
         delete_register_from_db(data)
     data = load_all_registered_from_db()
-    return render_template('RemoveRegister.html', data=data)
+    return render_template('database.html', data=data)
 
 @app.route('/static/<filename>')
 def static_file(filename):
