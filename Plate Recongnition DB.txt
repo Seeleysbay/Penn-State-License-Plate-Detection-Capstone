@@ -1,0 +1,36 @@
+Database Basics:
+
+
+CREATE TABLE Registration (
+    IDnum INT NOT NULL,
+    Name VARCHAR(40) NOT NULL,
+    PlateNum VARCHAR(40) NOT NULL,
+    PlateState VARCHAR(2) NOT NULL,
+    Make VARCHAR(40) NOT NULL,
+    Model VARCHAR(40) NOT NULL,
+    PersonType VARCHAR (40) NOT NULL,
+    Email VARCHAR(40) NOT NULL,
+    PRIMARY KEY (IDnum)
+);
+
+select * from Registration where IDnum = "123456" and PlateNum = *****;
+
+
+INSERT INTO Registration (IDnum, Name, PlateNum, PlateState, Make, Model, PersonType, Email)
+VALUES 
+    (1,'John Doe','ABC123', 'CA', 'Toyota', 'Camry','Student','MisterE@psu.edu'),
+    (2,'Sarah Marshel','XYZ-789', 'NY', 'Honda', 'Accord','Student','SMarsh@psu.edu'),
+    (3,'Mark Shaffer','DEF-456', 'TX', 'Ford', 'Mustang','Faculty','MShaff@psu.edu'),
+    (4,'Chris Redfield','GHI 789', 'FD', 'Chevrolet', 'Malibu','Faculty','ResEvil@psu.edu'),
+    (5,'Ethan Winters','JKL 012', 'AZ', 'Nissan', 'Altima','Student','EWinters@psu.edu'),
+    (6,'Victor Sullivan','MNO345', 'WA', 'Hyundai', 'Elantra','Faculty','Sully@psu.edu'),
+    (7,'Elena Fisher','PQ 45678', 'IL', 'Volkswagen', 'Jetta','Student','EFish@psu.edu'),
+    (8,'Nathan Drake','STU901', 'GA', 'BMW', 'X5','Student','NDrake@psu.edu'),
+    (9,'Issac Clarke','VWX 234', 'MI', 'Mercedes-Benz', 'C-Class','Faculty','ICMarker@psu.edu'),
+    (10,'Desmond Miles','YZA 567', 'OH', 'Kia', 'Optima','Student','DMiles@psu.edu');
+
+
+
+
+
+
