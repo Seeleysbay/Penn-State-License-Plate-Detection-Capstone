@@ -36,7 +36,8 @@ import com.example.parkingpermitapp.data.TextExtraction
 import androidx.compose.material3.Text
 import com.example.parkingpermitapp.data.BitmapFunctions
 import androidx.compose.ui.unit.sp
-
+import com.example.parkingpermitapp.network.PlatesAPI
+import com.example.parkingpermitapp.network.RetrofitClient
 
 
 @Composable
@@ -50,6 +51,10 @@ fun AppFunctions(modifier: Modifier = Modifier) {
     val imageAnalysisExecutor = Executors.newSingleThreadExecutor()
     val cameraPreviewWidth = 360 //width of the camera preview in app display, applied in .dp
     val cameraPreviewHeight = 360 //height of the camera preview in app display, applied in .dp
+    val platesApi =
+        RetrofitClient.getClient("https://pennstateocr-api.azurewebsites.net/").create(
+            PlatesAPI::class.java
+        )
 
     Column(modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally) {
@@ -74,7 +79,8 @@ fun AppFunctions(modifier: Modifier = Modifier) {
 
             if (ocrResultState.value.isNotEmpty()) {
                 isAnalysisActive.value = false
-                DisplayResult(ocrResultState = ocrResultState) {
+                DisplayResult(ocrResultState = ocrResultState, platesApi) {
+                    // trailing lambda, when close button is clicked
                     // Handle the close action, e.g., clear the OCR result
                     ocrResultState.value = ""
                     isAnalysisActive.value = true
