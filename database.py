@@ -30,10 +30,35 @@ def load_all_registered_from_db():
         return Registery
 
 
-def load_registered_from_db(PlateNum, PlateState):
+def load_vehicles_from_db():
     with engine.connect() as conn:
-        result_Register = conn.execute(
-            text("select * from Registration where PlateNum = :val and PlateState = :val2", val=PlateNum, val2=PlateState))
+        result_Vehicle = conn.execute(text("select * from Vehicle"))
+        result_all_Vehicle = result_Vehicle.all()
+
+        Vehicles = []
+
+        for rows in result_all_Vehicle:
+            Vehicles.append(rows)
+
+        return Vehicles
+
+
+def load_all_unregistered_from_db():
+    with engine.connect() as conn:
+        result_Unregistered = conn.execute(text("select * from Unregistered"))
+        result_all_Unregistered = result_Unregistered.all()
+
+        Unregistered = []
+
+        for rows in result_all_Unregistered:
+            Unregistered.append(rows)
+
+        return Unregistered
+
+
+def load_registered_from_db(PlateNum):
+    with engine.connect() as conn:
+        result_Register = conn.execute(text("select * from Registration where PlateNum = :val", val=PlateNum))
 
         findings = result_Register.all()
         if len(findings) == 0:
@@ -44,46 +69,14 @@ def load_registered_from_db(PlateNum, PlateState):
             return findings
 
 
-
 def add_register_to_db(data):
     with engine.connect() as conn:
         params = {
             'ID': data['ID#'],
             'plate': data['Plate#'],
             'state': data['State'],
-            'email': data['Email'],
-            'make': data['Make'],
-            'model': data['Model'],
-            'name': data['Name'],
-            'personType': data['PersonType']
-        }
-        result_Register = conn.execute(
-            text("select * from Registration where PlateNum = :plate and PlateState = :state"), params)
-        findings = result_Register.all()
-        if len(findings) == 0:
-            conn.execute(
-                text("insert into Registration values (:ID,:name, :plate, :state,:make,:model,:personType, :email);"),
-                params)
-            conn.commit()
-        else:
-            conn.commit()
-            return "Already Registered"
+            'email': data['Email']
+         }
+        conn.execute(text("insert into Registration values (:ID, :plate, :state, :email);"), params)
 
-
-def delete_register_from_db(data):
-    with engine.connect() as conn:
-        params = {
-            'ID': data['ID#'],
-            'plate': data['Plate#'],
-            'state': data['State'],
-
-        }
-        result_Register = conn.execute(
-            text("select * from Registration where PlateNum = :plate and PlateState = :state"), params)
-        findings = result_Register.all()
-        if len(findings) == 0:
-            conn.commit()
-            return "Person Not Registered"
-        else:
-            conn.execute(text("delete from Registration where IDnum = :ID"), params)
-            conn.commit()
+        conn.commit()

@@ -76,6 +76,26 @@ footer {
 }
 
 .submit-btn {
-    margin-top: 1em; /* Adjust as needed */
+    margin-top: 1em;
 }
+.centered-table-container {
+    overflow-x: auto;
+}
+
+.database-table {
+    width: 100%;
+    max-width: 100%;
+    margin: auto;
+    border-collapse: collapse;
+}
+
+.form-toggle-buttons {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.form-toggle-buttons button {
+    margin: 0 10px;
+}
+
 

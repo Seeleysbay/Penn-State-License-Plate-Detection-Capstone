@@ -1,0 +1,49 @@
+# Ignore the virtual environment
+venv/
+
+# Ignore all bytecode compiled files
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+__pycache__
+
+# Ignore OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Ignore version control directories
+.git/
+.gitignore
+.cvsignore
+
+# Ignore cache & logs
+.cache/
+*.log
+*.csv
+*.dat
+*.out
+*.pid
+*.tgz
+*.log
+*.csv
+*.dat
+*.out
+*.pid
+*.tgz
+
+# Ignore other unnecessary files
+node_modules/
+bower_components/

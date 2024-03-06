@@ -25,6 +25,11 @@
                 <li><a class="nav-button" href="/demo">Demo</a></li>
                 <li><a class="nav-button" href="/database">Database</a></li>
                 <li><a class="nav-button active" href="/changelog">Changelog</a></li>
+                {% if session.logged_in %}
+                <li><a class="nav-button" href="{{ url_for('logout') }}">Logout</a></li>
+                {% else %}
+                <li><a class="nav-button" href="{{ url_for('login') }}">Login</a></li>
+                {% endif %}
             </ul>
         </nav>
     </header>
