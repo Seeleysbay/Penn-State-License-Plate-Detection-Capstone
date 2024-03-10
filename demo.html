@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload License Plate Image - PennState Plates</title>
+    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+    <style>
+        body {
+            background-color: #0A0A0A;
+            color: #FFFFFF;
+            font-family: Arial, sans-serif;
+        }
+
+        header {
+            background-color: #121212;
+            padding: 20px 0;
+            text-align: center;
+            border-bottom: 2px solid #4A90E2;
+        }
+
+        header h1, .site-description {
+            color: #4A90E2;
+        }
+
+        .main-nav ul {
+            list-style: none;
+            padding: 0;
+            text-align: center;
+        }
+
+        .nav-button, .nav-button.active {
+            color: #4A90E2;
+            text-decoration: none;
+            border: 1px solid #4A90E2;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .nav-button:hover, .nav-button.active:hover {
+            background-color: #357ABD;
+            color: #FFFFFF;
+        }
+
+        main {
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        h3 {
+            color: #4A90E2;
+        }
+
+        form {
+            background-color: #161616;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        input[type="file"] {
+            color: #FFFFFF;
+        }
+
+        input[type="submit"] {
+            background-color: #4A90E2;
+            color: #FFFFFF;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: block; /* Making submit button block level for easier clicking */
+            width: 100%; /* Full width */
+            margin-top: 10px;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #357ABD;
+        }
+
+        .result-display {
+            background-color: #242424;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        .result-display img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #4A90E2; /* Adding a subtle border around the image */
+            margin-top: 10px;
+        }
+
+        footer {
+            text-align: center;
+            background-color: #121212;
+            color: #4A90E2;
+            padding: 10px 20px;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>$ ❯ PennState Plates</h1>
+        <div class="site-description">Simplifying the parking permit process.</div>
+        <nav class="main-nav">
+            <ul>
+                <li><a class="nav-button" href="{{ url_for('home') }}">Home</a></li>
+                <li><a class="nav-button" href="{{ url_for('about') }}">About</a></li>
+                <li><a class="nav-button" href="{{ url_for('demo') }}">Demo</a></li>
+                <li><a class="nav-button" href="{{ url_for('database') }}">Database</a></li>
+                <li><a class="nav-button" href="{{ url_for('changelog') }}">Changelog</a></li>
+                {% if session.logged_in %}
+                <li><a class="nav-button" href="{{ url_for('logout') }}">Logout</a></li>
+                {% else %}
+                <li><a class="nav-button" href="{{ url_for('login') }}">Login</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+    <article class="h-entry content-box">
+        <h3>Demo: License Plate Recognition</h3>
+        <p>Upload an image of a license plate to see the OCR in action.</p>
+        <form action="{{ url_for('upload_file') }}" method="post" enctype="multipart/form-data">
+            <input type="file" name="image" required>
+            <input type="submit" value="Upload and Analyze">
+        </form>
+        {% if processed_image %}
+            <div class="result-display">
+                <h3>Processed Image:</h3>
+                <img src="{{ url_for('static', filename=processed_image) }}" alt="Processed Image">
+                <p>Plate Number: {{ plate_number }}</p>
+                <p>State: {{ state_name }}</p>
+            </div>
+        {% endif %}
+    </article>
+</main>
+
+
+    <footer>
+        &copy; {{ current_year }} PennState Plates.
+    </footer>
+
+    <script>
+        // If you have any JavaScript, it would go here.
+    </script>
+</body>
+</html>

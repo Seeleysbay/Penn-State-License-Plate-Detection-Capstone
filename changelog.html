@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="generator" content="Hugo 0.58.2" />
+    <title>PennState Plates</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        body {
+            background-color: #0A0A0A; /* Dark background */
+            color: #FFFFFF; /* White text for readability */
+            font-family: Arial, sans-serif; /* Enhancing readability */
+        }
+
+        header {
+            background-color: #121212; /* Dark header background */
+            border-bottom: 2px solid #4A90E2; /* Blue accent line */
+            padding: 20px 0;
+        }
+
+        header h1, .site-description {
+            text-align: center;
+            color: #FFFFFF; /* Blue text for titles and descriptions */
+        }
+
+        .main-nav ul {
+            list-style: none;
+            padding: 0;
+            text-align: center;
+        }
+
+        .nav-button, .nav-button.active {
+            color: #4A90E2; /* Blue text for navigation buttons */
+            text-decoration: none;
+            border: 1px solid #4A90E2; /* Blue border */
+            padding: 5px 10px;
+            border-radius: 5px; /* Rounded corners */
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .nav-button:hover, .nav-button.active {
+            background-color: #4A90E2; /* Blue background on hover */
+            color: #FFFFFF; /* White text on hover */
+        }
+
+        main {
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        h2, h3 {
+            color: #4A90E2; /* Blue headings */
+        }
+
+        a {
+            color: #4A90E2; /* Blue links */
+        }
+
+        a:hover {
+            color: #357ABD; /* Darker blue on hover */
+        }
+
+        .tags a {
+            background-color: #333333; /* Dark background for tags */
+            color: #4A90E2; /* Blue text for tags */
+            padding: 2px 6px;
+            border-radius: 3px; /* Rounded corners for tag pills */
+            text-decoration: none;
+        }
+
+        .tags a:hover {
+            background-color: #4A90E2; /* Blue background on hover for tags */
+            color: #FFFFFF; /* White text on hover */
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #4A90E2; /* Blue text for footer */
+        }
+    </style>
+
+    <link rel="alternate" type="application/rss+xml" href="https://pennstateplates.com/index.xml" title="PennState Plates">
+    <link rel="authorization_endpoint" href="https://indieauth.com/auth">
+    <link rel="token_endpoint" href="https://tokens.indieauth.com/token">
+    <link rel="microsub" href="https://aperture.p3k.io/microsub/205">
+</head>
+<body>
+    <header>
+        <h1>$ ❯ PennState Plates</h1>
+        <div class="site-description">Simplifying the parking permit process.</div>
+        <nav class="main-nav">
+            <ul>
+                <li><a class="nav-button" href="/">Home</a></li>
+                <li><a class="nav-button" href="/about">About</a></li>
+                <li><a class="nav-button" href="/demo">Demo</a></li>
+                <li><a class="nav-button" href="/database">Database</a></li>
+                <li><a class="nav-button active" href="/changelog">Changelog</a></li>
+            </ul>
+        </nav>
+    </header>
+
+<main>
+    <div class="h-feed">
+        <!-- Changelog Title and Description -->
+        <h2 class="p-name"><a class="p-name u-url" href="changelog">Changelog</a></h2>
+        <div class="list-page-header p-summary">
+            <p>Keep up to date with the latest updates and improvements to PennState Plates. Here, we document all significant changes, enhancements, and bug fixes to ensure you're always informed about the evolution of our project.</p>
+        </div>
+
+        <article class="h-entry">
+    <header>
+        <time class="dt-published" datetime="2024-02-15 10:00">2024-02-15</time>
+       <a class="p-name u-url" href="update2"> <h3 class="p-name">Update 2: Security Enhancements</h3></a>
+    </header>
+    <p class="p-summary">
+        In our ongoing efforts to improve security, we've introduced several key enhancements. These include two-factor authentication for all users, improved encryption for data storage, and new monitoring tools for detecting unusual activity. Our commitment to your security is unwavering, and we're always working to protect your data.
+    </p>
+    <a href="/changelog/security-enhancements" class="u-url">Read more...</a>
+    <nav class="tags">
+        <strong>Tags:</strong>
+        <a href="/tags/security" rel="tag" class="p-category" title="security">#security</a>
+        <a href="/tags/updates" rel="tag" class="p-category" title="updates">#updates</a>
+        <a href="/tags/features" rel="tag" class="p-category" title="features">#features</a>
+    </nav>
+</article>
+
+    </div>
+</main>
+
+
+    <footer>
+        &copy; 2024 PennState Plates.
+    </footer>
+</body>
+</html>
