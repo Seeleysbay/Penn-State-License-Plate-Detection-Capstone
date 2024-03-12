@@ -37,8 +37,14 @@ def find_closest_word(input_word, word_list):
 
     return closest_word
 
-# Example usage
+# Example usage 1
 input_word = "Iowzina"
+closest_word = find_closest_word(input_word.upper(), listofstates)
+
+print(f"The closest word to '{input_word}' is '{closest_word}'.")
+
+# Example Usage 2
+input_word = "Mizouri"
 closest_word = find_closest_word(input_word.upper(), listofstates)
 
 print(f"The closest word to '{input_word}' is '{closest_word}'.")
