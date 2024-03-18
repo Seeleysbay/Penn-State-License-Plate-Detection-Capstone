@@ -107,12 +107,22 @@ def delete_register_from_db(data):
 
 
 def extend_register_from_db(data):
+    extend_date = datetime.strptime(data['ExtendDate'], '%Y-%m-%d %H:%M:%S')
+    current_date = datetime.now()
+    if extend_date.year > current_date.year:
+        return "Year Exceeded"
+    if extend_date.month > 12 | extend_date.month < 0:
+        return "Month Exceeded or is Unrealistic"
+    if extend_date.day > 31 | extend_date.day < 0:
+        return "Day Exceeded or is Unrealistic"
+    if extend_date < current_date:
+        return "Extension date cannot be in the past"
     with engine.connect() as conn:
         params = {
             'ID': data['ID#'],
             'plate': data['Plate#'],
             'state': data['State'],
-            'extendDate': data['ExtendDate']
+            'extendDate': extend_date
         }
         result_Register = conn.execute(text("select * from Registration where PlateNum = :plate and PlateState = :state"), params)
         findings = result_Register.all()
@@ -122,4 +132,3 @@ def extend_register_from_db(data):
         else:
             conn.execute(text("update Registration set EndReg = :extendDate where IDnum = :ID"), params)
             conn.commit()
-
