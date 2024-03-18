@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -160,11 +161,17 @@ fun DisplayResult(ocrResultState: MutableState<String>,platesApi: PlatesAPI, onC
                 }
                 //Display API query results
                 else{
-                    Text(
-                        text = apiResponse!!,
-                        modifier = Modifier.padding(16.dp),
-                        color = Color.Black // Example: Setting the text color to red
-                    )
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize().padding(16.dp)
+                    ) {
+                        item {
+                            // Display API query results here
+                            Text(
+                                text = apiResponse!!,
+                                color = Color.Black
+                            )
+                        }
+                    }
                 }
             }
             Button(

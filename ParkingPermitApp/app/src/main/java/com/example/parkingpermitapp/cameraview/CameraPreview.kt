@@ -10,6 +10,7 @@ import androidx.camera.view.PreviewView
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -32,12 +33,14 @@ import com.example.parkingpermitapp.data.CustomObjectDetector
 import com.example.parkingpermitapp.ui.theme.Navy
 import java.util.concurrent.ExecutorService
 import com.example.parkingpermitapp.data.DisplayResult
+import com.example.parkingpermitapp.data.DisplayBatchResult
 import com.example.parkingpermitapp.data.TextExtraction
 import androidx.compose.material3.Text
 import com.example.parkingpermitapp.data.BitmapFunctions
 import androidx.compose.ui.unit.sp
 import com.example.parkingpermitapp.network.PlatesAPI
 import com.example.parkingpermitapp.network.RetrofitClient
+import org.apache.commons.lang3.StringUtils.substringAfter
 
 
 @Composable
@@ -46,11 +49,18 @@ fun AppFunctions(modifier: Modifier = Modifier) {
     //Listeners
     val detectionResultState = remember { mutableStateOf<DetectionResult?>(null) }
     var ocrResultState = remember { mutableStateOf<String>("") }
-    val isAnalysisActive = remember { mutableStateOf(true) }
+    val isAnalysisActive = remember { mutableStateOf(true) } //boolean flag for whether or not image should be sent to TextExtraction object
+    val submitBatch = remember { mutableStateOf(false)} //boolean flag, activated when submit batch button clicked
+    var plateCount = remember { mutableStateOf<Int>(0)}
+    val radioOptions = listOf("Individual Search", "Batch Scan")
+    val (selectedOption, onOptionSelected) = remember { mutableStateOf(radioOptions[1] ) }
 
+    var plates = remember {mutableListOf<String>()} //list containing plates from batch scan, parallel with states
+    var states = remember { mutableListOf<String>() }//list containing states from batch scan, parallel with plates
     val imageAnalysisExecutor = Executors.newSingleThreadExecutor()
     val cameraPreviewWidth = 360 //width of the camera preview in app display, applied in .dp
     val cameraPreviewHeight = 360 //height of the camera preview in app display, applied in .dp
+    //Add URL to your API here
     val platesApi =
         RetrofitClient.getClient("https://pennstateocr-api.azurewebsites.net/").create(
             PlatesAPI::class.java
@@ -58,31 +68,66 @@ fun AppFunctions(modifier: Modifier = Modifier) {
 
     Column(modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(
-            text = "Scan A License Plate",
+        /*Text(
+            text = "Penn State Plates",
             modifier = Modifier.padding(5.dp),
             style = MaterialTheme.typography.bodyMedium,
             color = Navy,
             fontSize = 20.sp
-        )
+        )*/
+        RadioButtons(submitBatch, plateCount, radioOptions, selectedOption = selectedOption, onOptionSelected = onOptionSelected)
+
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             CameraPreview(
                 modifier = Modifier
-                    .width(cameraPreviewWidth.dp)
-                    .height(cameraPreviewHeight.dp)
+                    .fillMaxSize()
                     .clipToBounds(),
                 imageAnalysisExecutor,
                 detectionResultState,
                 ocrResultState,
                 isAnalysisActive
             )
-
-            if (ocrResultState.value.isNotEmpty()) {
+            //Get information on an individual plate
+            if (ocrResultState.value.isNotEmpty() && selectedOption == radioOptions[0]) {
                 isAnalysisActive.value = false
                 DisplayResult(ocrResultState = ocrResultState, platesApi) {
-                    // trailing lambda, when close button is clicked
-                    // Handle the close action, e.g., clear the OCR result
+                    // trailing lambda, when close button is clicked from DisplayResult,
+                    // the following values are set
                     ocrResultState.value = ""
+                    isAnalysisActive.value = true
+                }
+            }
+            //Store results for Batch, submit batch if Batch Search Button is clicked
+            if(ocrResultState.value.isNotEmpty() && selectedOption == radioOptions[1]){
+                // Add OCR results to corresponding arrays
+                isAnalysisActive.value = false
+                var plate = ocrResultState.value.substringBefore('_', "")
+                var state = ocrResultState.value.substringAfter('_', "")
+                if(plates.size == 0 && plateCount.value == 0){
+                    plates.add(plate)
+                    states.add(state)
+                    plateCount.value++ //increment number of scanned plates displayed
+                }
+                else if (!(plates.contains(plate))) {
+                    //Don't rescan the last plate continuously
+                    plates.add(plate)
+                    states.add(state)
+                    Log.d("Plate List SIZE: ", plates[0] )
+                    plateCount.value++ //increment number of scanned plates displayed
+                }
+                ocrResultState.value = ""
+                isAnalysisActive.value = true
+            }
+            //submit batch to API
+            if(submitBatch.value == true && plates.size != 0){
+                isAnalysisActive.value = false
+                DisplayBatchResult(plates, states, platesApi) {
+                    // trailing lambda, when close button is clicked from DisplayResult,
+                    // the following values are set
+                    submitBatch.value = false
+                    plateCount.value = 0
+                    plates.clear()
+                    states.clear()
                     isAnalysisActive.value = true
                 }
             }
