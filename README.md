@@ -9,7 +9,7 @@ Sponsors: None
 
 Faculty Advisor: Truong Tran
 
-Technologies: Microsoft SQL Server Django, Kotlin, Jupyter Notebook, CameraX
+Technologies: Microsoft SQL Server, Kotlin, Jupyter Notebook, CameraX, FastApi, Flask
 
 Problem Statement:
 
