@@ -109,7 +109,7 @@ def delete_register_from_db(data):
 
 
 def extend_register_from_db(data):
-    extend_date = datetime.strptime(data['ExtendDate'], '%Y-%m-%d %H:%M:%S')
+    extend_date = datetime.strptime(data['ExtendDate'], '%Y-%m-%d')
     current_date = datetime.now()
     if extend_date.year > current_date.year:
         return "Year Exceeded"
