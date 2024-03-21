@@ -144,3 +144,39 @@ def extend_register_from_db(data):
         else:
             conn.execute(text("update Registration set EndReg = :extendDate where IDnum = :ID"), params)
             conn.commit()
+
+
+def database_search_name(name):
+    with engine.connect() as conn:
+        result_Register = conn.execute(text("select * from Registration where Name= :val", val=name))
+        findings = result_Register.all()
+        if len(findings) == 0:
+            conn.commit()
+            return "Person not in Register"
+        else:
+            conn.commit()
+            return findings
+
+
+def database_search_date(date):
+    with engine.connect() as conn:
+        result_Register = conn.execute(text("select * from Registration where StartReg= :val", val=date))
+        findings = result_Register.all()
+        if len(findings) == 0:
+            conn.commit()
+            return "Not in Register"
+        else:
+            conn.commit()
+            return findings
+
+
+def database_search_state(state):
+    with engine.connect() as conn:
+        result_Register = conn.execute(text("select * from Registration where PlateState= :val", val=state))
+        findings = result_Register.all()
+        if len(findings) == 0:
+            conn.commit()
+            return "Not in Register"
+        else:
+            conn.commit()
+            return findings
