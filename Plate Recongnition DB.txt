@@ -22,6 +22,12 @@ Create Table RegFails (
     PRIMARY KEY (PlateNum)
 );
 
+Create Table AdminUser (
+    NameUser VARCHAR(20) NOT NULL,
+    Password VARCHAR(20) NOT NULL,
+    PRIMARY KEY (NameUser)
+);
+
 Registration date time: 
 When a person is registered to the database have a timestamp taken from the python code and
 placed in so that value is stored in the database then from their it would add a few months to the timestamp to give a deadline
