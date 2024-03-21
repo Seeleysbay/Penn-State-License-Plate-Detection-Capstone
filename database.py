@@ -53,9 +53,19 @@ def load_registered_from_db(PlateNum, PlateState):
 
         findings = result_Register.all()
         if len(findings) == 0:
-            conn.execute(text("insert into RegFails values (:val1, :val2, CURRENT_TIMESTAMP)", val1=PlateNum, val2=PlateState))
-            conn.commit()
-            return "Plate Not Registered, Added to Fails"
+            two_weeks_ago = datetime.now() - timedelta(days=14)
+            search_Result = conn.execute(text("select * from RegFails where LogDate <= :time;").bindparams(time=two_weeks_ago))
+            findings = search_Result.all()
+            if len(findings) == 0:
+                conn.execute(text("insert into RegFails values (:val1, :val2, CURRENT_TIMESTAMP)", val1=PlateNum, val2=PlateState))
+                conn.commit()
+                return "Plate Not Registered, Added to Fails"
+            else:
+                conn.execute(text("delete from RegFails where LogDate <= ;").bindparams(time=two_weeks_ago))
+
+                conn.execute(text("insert into RegFails values (:val1, :val2, CURRENT_TIMESTAMP)", val1=PlateNum, val2=PlateState))
+                conn.commit()
+                return "Plate Not Registered, Added to Fails"
 
         else:
             conn.commit()
