@@ -57,3 +57,16 @@ VALUES
     (11,'Brendan Gaffney','ZMJ-1004', 'PA', 'Hyundai', 'Elantra','Student','BGaff@psu.edu',Current_TIMESTAMP ,DATE_ADD(CURRENT_DATE, INTERVAL 6 MONTH));
 
 
+Plates:
+
+Wisconsin WI 885-JEF X
+
+Michigan MI DNJ 0955 X
+
+Hawaii HI SND 877 X
+
+California CA 8TRS777 X
+
+Pennsylvania PA ZMJ-1004 X
+
+
