@@ -15,6 +15,13 @@ CREATE TABLE Registration (
     PRIMARY KEY (IDnum)
 );
 
+Create Table RegFails (
+    PlateNum VARCHAR(40) NOT NULL,
+    PlateState VARCHAR(2) NOT NULL,
+    LogDate DateTime NOT NULL,
+    PRIMARY KEY (PlateNum)
+);
+
 Registration date time: 
 When a person is registered to the database have a timestamp taken from the python code and
 placed in so that value is stored in the database then from their it would add a few months to the timestamp to give a deadline
