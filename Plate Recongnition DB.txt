@@ -28,8 +28,7 @@ placed in so that value is stored in the database then from their it would add a
 period. Which then it would give a signal to the admin to delete the user with a notification, or
 to have the database send a delete query for the out of time users, such as the visitors that go past a 
 day pass.
-- think of possible ways for visitors to have extensions?
-- how to impliment multiple vehicle additions?
+
 
 select * from Registration where IDnum = "123456" and PlateNum = *****;
 
