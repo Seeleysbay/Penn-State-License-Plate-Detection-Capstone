@@ -54,5 +54,6 @@ VALUES
     (8,'Nathan Drake','STU901', 'GA', 'BMW', 'X5','Student','NDrake@psu.edu', Current_TIMESTAMP,DATE_ADD(CURRENT_DATE, INTERVAL 6 MONTH)),
     (9,'Issac Clarke','VWX 234', 'MI', 'Mercedes-Benz', 'C-Class','Faculty','ICMarker@psu.edu', Current_TIMESTAMP,DATE_ADD(CURRENT_DATE, INTERVAL 6 MONTH)),
     (10,'Desmond Miles','YZA 567', 'OH', 'Kia', 'Optima','Student','DMiles@psu.edu',Current_TIMESTAMP ,DATE_ADD(CURRENT_DATE, INTERVAL 6 MONTH));
+    (11,'Brendan Gaffney','ZMJ-1004', 'PA', 'Hyundai', 'Elantra','Student','BGaff@psu.edu',Current_TIMESTAMP ,DATE_ADD(CURRENT_DATE, INTERVAL 6 MONTH));
 
 
