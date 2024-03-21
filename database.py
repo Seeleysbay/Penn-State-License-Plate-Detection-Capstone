@@ -53,8 +53,10 @@ def load_registered_from_db(PlateNum, PlateState):
 
         findings = result_Register.all()
         if len(findings) == 0:
+            conn.execute(text("insert into RegFails values (:val1, :val2, CURRENT_TIMESTAMP)", val1=PlateNum, val2=PlateState))
             conn.commit()
-            return None
+            return "Plate Not Registered, Added to Fails"
+
         else:
             conn.commit()
             return findings
