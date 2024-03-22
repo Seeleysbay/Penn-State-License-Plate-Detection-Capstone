@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="generator" content="Hugo 0.58.2" />
+    <title>PennState Plates</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <link rel="alternate" type="application/rss+xml" href="https://pennstateplates.com/index.xml" title="PennState Plates">
+    <link rel="authorization_endpoint" href="https://indieauth.com/auth">
+    <link rel="token_endpoint" href="https://tokens.indieauth.com/token">
+    <link rel="microsub" href="https://aperture.p3k.io/microsub/205">
+</head>
+<body>
+    <header>
+        <h1>$ ❯ PennState Plates</h1>
+        <div class="site-description">Simplifying the parking permit process.</div>
+        <nav class="main-nav">
+            <ul>
+                <li><a class="nav-button" href="{{ url_for('home') }}">Home</a></li>
+                <li><a class="nav-button" href="{{ url_for('about') }}">About</a></li>
+                <li><a class="nav-button" href="{{ url_for('database') }}">Database</a></li>
+                <li><a class="nav-button" href="{{ url_for('changelog') }}">Changelog</a></li>
+                {% if session.logged_in %}
+                <li><a class="nav-button" href="{{ url_for('logout') }}">Logout</a></li>
+                {% else %}
+                <li><a class="nav-button" href="{{ url_for('login') }}">Login</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="block h-card">
+            <section class="author">
+                <aside>
+                    <figure class="author-image-container">
+                        <img class="u-photo" alt="Project Logo" src="{{ url_for('static', filename='images/license_plate_project_logo.png') }}" height="90" width="90" />
+                    </figure>
+                </aside>
+                <div class="author-box">
+                    <div class="author-intro">
+                        Welcome to <a class="p-name u-url" href="/">PennState Plates</a>. This capstone project aims to simplify the parking permit process.
+                    </div>
+                    <div class="author-bio p-note">
+                        <p>The application used in this project will scan and detect a license plate, checking to see if the license plate is registered in the parking permit system. Further information can be found in the about section of the website.</p>
+                    </div>
+                </div>
+                <div class="elsewhere">
+                    <a class="elsewhere-link" target="_blank" rel="me" href="https://www.youtube.com/">
+                        <svg class="elsewhere-icon" aria-label="YouTube" role="img" width="32" height="32" viewBox="0 0 512 512">
+                            <g>
+                                <rect width="512" height="512" style="fill:var(--accent)" ry="65.517235"></rect>
+                                <path style="fill:var(--bg)" transform="translate(62,50)"
+                                      d="M199.91667116 105.6302382s-84.29180001.00007866-105.44791902 5.49739608c-11.32771618 3.16506938-20.655211 12.49266687-23.82031238 23.98698305-5.49727075 21.15613367-5.49739608 64.9687477-5.49739608 64.9687477s.00012533 43.97893404 5.49739608 64.80208104c3.16510139 11.49416018 12.3260082 20.65517366 23.82031238 23.82032038 21.32270701 5.6638401 105.44791902 5.66405342 105.44791902 5.66405342s84.45890802-.00006666 105.61458836-5.49738675c11.49438685-3.16508005 20.655107-12.15954686 23.65364037-23.82032038 5.66390676-20.98976034 5.66406676-64.80208104 5.66406676-64.80208104s.16645334-43.9792807-5.66406676-65.13541437c-2.99853338-11.49431618-12.15925352-20.65511233-23.65364037-23.65364971-21.15568034-5.83046276-105.61458836-5.83072943-105.61458836-5.83072943zm-26.8203071 53.97395285 70.13281446 40.47917398-70.13281445 40.31250732v-80.7916813z"></path>
+                            </g>
+                        </svg>
+                    </a>
+                    <a class="elsewhere-link" target="_blank" rel="me" href="https://github.com/Seeleysbay/Penn-State-License-Plate-Detection-Capstone">
+                        <svg class="elsewhere-icon" aria-label="Github" role="img" width="32" height="32" viewBox="0 0 512 512">
+                            <path d="M335 499c14 0 12 17 12 17H165s-2-17 12-17c13 0 16-6 16-12l-1-50c-71 16-86-28-86-28-12-30-28-37-28-37-24-16 1-16 1-16 26 2 40 26 40 26 22 39 59 28 74 22 2-17 9-28 16-35-57-6-116-28-116-126 0-28 10-51 26-69-3-6-11-32 3-67 0 0 21-7 70 26 42-12 86-12 128 0 49-33 70-26 70-26 14 35 6 61 3 67 16 18 26 41 26 69 0 98-60 120-117 126 10 8 18 24 18 48l-1 70c0 6 3 12 16 12z"/>
+                        </svg>
+                    </a>
+                    <a class="elsewhere-link" target="_blank" rel="me" href="mailto:tvw5105@psu.edu">
+                        <svg class="elsewhere-icon" aria-label="Email" role="img" width="32" height="32" viewBox="0 0 512 512">
+                            <path d="M299 268l124 106c-4 4-10 7-17 7H106c-7 0-13-3-17-7l124-106 43 38 43-38zm-43 13L89 138c4-4 10-7 17-7h300c7 0 13 3 17 7L256 281zm54-23l121-105v208L310 258zM81 153l121 105L81 361V153z" />
+                        </svg>
+                    </a>
+                </div>
+            </section>
+
+</div>
+        <div class="h-feed">
+
+  <h3>Changelog</h3>
+  <ul>
+
+    <li class="h-entry">
+      <time class="dt-published" datetime="2024-02-01 10:00">
+        2024-02-01
+      </time>
+      <a class="u-url" href="/changelog/update-1">
+        <span class="p-name">Update 1: Feature Improvements</span>
+      </a>
+    </li>
+
+    <li class="h-entry">
+      <time class="dt-published" datetime="2024-01-20 09:00">
+        2024-01-20
+      </time>
+      <a class="u-url" href="/changelog/update-2">
+        <span class="p-name">Update 2: Bug Fixes</span>
+      </a>
+    </li>
+
+    <li class="h-entry">
+                    <time class="dt-published" datetime="2024-04-01 09:00">
+                        2024-04-01
+                    </time>
+                    <a class="u-url" href="/changelog/update-6">
+                        <span class="p-name">Update 6: User Interface Overhaul</span>
+                    </a>
+                </li>
+
+                <li class="h-entry">
+                    <time class="dt-published" datetime="2024-04-15 11:00">
+                        2024-04-15
+                    </time>
+                    <a class="u-url" href="/changelog/update-7">
+                        <span class="p-name">Update 7: Expanded Language Support</span>
+                    </a>
+                </li>
+
+                <li class="h-entry">
+                    <time class="dt-published" datetime="2024-05-01 08:30">
+                        2024-05-01
+                    </time>
+                    <a class="u-url" href="/changelog/update-8">
+                        <span class="p-name">Update 8: Database Optimization</span>
+                    </a>
+                </li>
+
+                <li class="h-entry">
+                    <time class="dt-published" datetime="2024-05-20 14:00">
+                        2024-05-20
+                    </time>
+                    <a class="u-url" href="/changelog/update-9">
+                        <span class="p-name">Update 9: Added Two-Factor Authentication</span>
+                    </a>
+                </li>
+
+                <li class="h-entry">
+                    <time class="dt-published" datetime="2024-06-05 16:45">
+                        2024-06-05
+                    </time>
+                    <a class="u-url" href="/changelog/update-10">
+                        <span class="p-name">Update 10: Mobile App Improvements</span>
+                    </a>
+                </li>
+
+
+  </ul>
+</div>
+
+    </main>
+
+    <footer>
+        &copy; 2024 PennState Plates.
+        <!-- Add any additional footer details here -->
+    </footer>
+</body>
+</html>
