@@ -92,7 +92,7 @@ def add_register_to_db(data):
                 conn.execute(text("insert into Registration values (:ID,:name, :plate, :state,:make,:model,:personType, :email, Current_TIMESTAMP, Current_DATE+1);"), params)
                 conn.commit()
             else:
-                conn.execute(text("insert into Registration values (:ID,:name, :plate, :state,:make,:model,:personType, :email, Current_TIMESTAMP,DATE_ADD(CURRENT_DATE, INTERVAL 6 MONTH);"), params)
+                conn.execute(text("insert into Registration values (:ID,:name, :plate, :state,:make,:model,:personType, :email, Current_TIMESTAMP,DATE_ADD(CURRENT_DATE, INTERVAL 6 MONTH));"), params)
                 conn.commit()
 
         else:
