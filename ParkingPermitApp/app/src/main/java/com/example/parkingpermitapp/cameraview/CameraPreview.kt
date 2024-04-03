@@ -51,7 +51,8 @@ fun AppFunctions(modifier: Modifier = Modifier) {
     var ocrResultState = remember { mutableStateOf<String>("") }
     val isAnalysisActive = remember { mutableStateOf(true) } //boolean flag for whether or not image should be sent to TextExtraction object
     val submitBatch = remember { mutableStateOf(false)} //boolean flag, activated when submit batch button clicked
-    var plateCount = remember { mutableStateOf<Int>(0)}
+    val clearBatch = remember { mutableStateOf(false)} //boolean flag, activate when clear batch button clicked
+    var plateCount = remember { mutableStateOf<Int>(0)} //number of plates scanned in batch
     val radioOptions = listOf("Individual Search", "Batch Scan")
     val (selectedOption, onOptionSelected) = remember { mutableStateOf(radioOptions[1] ) }
 
@@ -75,7 +76,7 @@ fun AppFunctions(modifier: Modifier = Modifier) {
             color = Navy,
             fontSize = 20.sp
         )*/
-        RadioButtons(submitBatch, plateCount, radioOptions, selectedOption = selectedOption, onOptionSelected = onOptionSelected)
+        RadioButtons(submitBatch, clearBatch, plateCount, radioOptions, selectedOption = selectedOption, onOptionSelected = onOptionSelected)
 
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             CameraPreview(
@@ -130,6 +131,12 @@ fun AppFunctions(modifier: Modifier = Modifier) {
                     states.clear()
                     isAnalysisActive.value = true
                 }
+            }
+            if(clearBatch.value == true){
+                clearBatch.value = false
+                plateCount.value = 0
+                plates.clear()
+                states.clear()
             }
 
         }

@@ -63,7 +63,7 @@ fun HomeScreen() {
         .padding(0.dp)
         .background(Color.White)) {
         Image(
-            painter = painterResource(id = R.drawable.psutransportationservices),
+            painter = painterResource(id = R.drawable.ps_transportations_services2),
             contentDescription = null,
             modifier = Modifier.fillMaxWidth(),
             contentScale = ContentScale.Crop
