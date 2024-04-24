@@ -1,86 +1,293 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta name="generator" content="Hugo 0.58.2" />
-    <title>PennState Plates</title>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-
-    <link rel="alternate" type="application/rss+xml" href="https://pennstateplates.com/index.xml" title="PennState Plates">
-    <link rel="authorization_endpoint" href="https://indieauth.com/auth">
-    <link rel="token_endpoint" href="https://tokens.indieauth.com/token">
-    <link rel="microsub" href="https://aperture.p3k.io/microsub/205">
+    <div style="text-align: right; padding: 1rem;">
+        <a href="{{ url_for('logout') }}" class="btn btn-logout">Logout</a>
+    </div>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Database Table</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/databasestyles.css') }}">
 </head>
 <body>
-    <header>
-        <h1>$ ❯ PennState Plates</h1>
-        <div class="site-description">Simplifying the parking permit process.</div>
-        <nav class="main-nav">
-            <ul>
-                <li><a class="nav-button" href="{{ url_for('home') }}">Home</a></li>
-                <li><a class="nav-button" href="{{ url_for('about') }}">About</a></li>
-                <li><a class="nav-button" href="{{ url_for('demo') }}">Demo</a></li>
-                <li><a class="nav-button" href="{{ url_for('database') }}">Database</a></li>
-                <li><a class="nav-button" href="{{ url_for('changelog') }}">Changelog</a></li>
-            </ul>
-        </nav>
-    </header>
-
-<main>
-    <article class="h-entry content-box">
-        <h2>Database</h2>
-        <!-- Your database table -->
-        <table>
-            <thead>
-                <tr>
-                    <th>IDNum</th>
-                    <th>PlateNum</th>
-                    <th>PlateState</th>
-                    <th>Email</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for row in data %}
-                <tr>
-                    <td>{{ row[0] }}</td>
-                    <td>{{ row[1] }}</td>
-                    <td>{{ row[2] }}</td>
-                    <td>{{ row[3] }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-
-        <!-- Add Register Form -->
-        <div class="add-register-form">
-            <h3>Add User to Register</h3>
-            <form method="POST" action="{{ url_for('register') }}">
-
-                <label for="idNum">ID#:</label>
-                <input type="text" id="idNum" name="ID#" placeholder="12345" required>
-
-                <label for="plateNum">Plate#:</label>
-                <input type="text" id="plateNum" name="Plate#" placeholder="ABC1354" required>
-
-                <label for="state">State:</label>
-                <input type="text" id="state" name="State" placeholder="Pennsylvania" required>
-
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="Email" placeholder="abc@psu.edu" required>
-
-                <input type="submit" value="Add to Register">
-            </form>
-        </div>
-    </article>
-</main>
+    <main>
+        <article class="h-entry content-box">
+            <h2>Registered Vehicles</h2>
+            <div class="toggle-switch-container" style="text-align: center;">
+                <label class="switch">
+                    <input type="checkbox" id="viewToggle" onchange="toggleView()">
+                    <span class="slider round"></span>
+                </label>
 
 
-    <footer>
-        &copy; {{ current_year }} PennState Plates.
-    </footer>
+            </div>
+            <div class="centered-table-container" id="registeredTable" style="display:block">
+                <table class="table-fill">
+                <thead>
+                    <tr>
+                        <th>IDNum</th>
+                        <th>Name</th>
+                        <th>PlateNum</th>
+                        <th>PlateState</th>
+                        <th>Vehicle-Make</th>
+                        <th>Vehicle-Model</th>
+                        <th>PersonType</th>
+                        <th>Email</th>
+                         <th>StartReg</th> <!-- New field -->
+                        <th>EndReg</th>   <!-- New field -->
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in data1 %}
+                    <tr>
+                        <td>{{row[0]}}</td>
+                        <td>{{row[1]}}</td>
+                        <td>{{row[2]}}</td>
+                        <td>{{row[3]}}</td>
+                        <td>{{row[4]}}</td>
+                        <td>{{row[5]}}</td>
+                        <td>{{row[6]}}</td>
+                        <td>{{row[7]}}</td>
+                        <td>{{ row[8]}}</td> <!-- Displaying StartReg -->
+                        <td>{{ row[9] }}</td> <!-- Displaying EndReg -->
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            </div>
 
-    <!-- Your script tags would go here if you have any -->
-</body>
-</html>
+             <div class="centered-table-container" id="unregisteredTable" style = "display: none">
+                <table class="table-fill">
+                <thead>
+                    <tr>
+                        <th>PlateNum</th>
+                        <th>PlateState</th>
+                         <th>LogDate</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in data2 %}
+                    <tr>
+                        <td>{{row[0]}}</td>
+                        <td>{{row[1]}}</td>
+                        <td>{{ row[2]}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            </div>
+
+
+           {% if is_admin %}
+    <div class="form-toggle-buttons">
+        <button type="button" onclick="toggleForm('addForm')">Add Registration</button>
+        <button type="button" onclick="toggleForm('removeForm')">Remove Registration</button>
+        <button type="button" onclick="toggleForm('extensionForm')">Add Extension</button>
+        <button type="button" onclick="toggleForm('searchForm')">Search</button>
+    </div>
+    
+    <div class="form-container" id="addForm" style="display:none;">
+        <h3>Add User to Register</h3>
+        <form method="POST" action="{{ url_for('register') }}">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="idNum">ID#:</label>
+              <input type="text" id="idNum" name="ID#" placeholder="12345" required>
+            </div>
+            <div class="form-group">
+              <label for="name">Name:</label>
+              <input type="text" id="name" name="Name" placeholder="John Doe" required>
+            </div>
+            <div class="form-group">
+              <label for="plateNum">Plate#:</label>
+              <input type="text" id="plateNum" name="Plate#" placeholder="ABC1234" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="state">State:</label>
+              <input type="text" id="state" name="State" placeholder="Pennsylvania" required>
+            </div>
+            <div class="form-group">
+              <label for="make">Vehicle Make:</label>
+              <input type="text" id="make" name="Make" placeholder="Toyota" required>
+            </div>
+            <div class="form-group">
+              <label for="model">Vehicle Model:</label>
+              <input type="text" id="model" name="Model" placeholder="Camry" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>PersonType:</label>
+              <select name="PersonType" id="PersonType">
+                <option value="Student">Student</option>
+                <option value="Faculty">Faculty</option>
+                <option value="Visitor">Visitor</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="email">Email:</label>
+              <input type="email" id="email" name="Email" placeholder="johndoe@psu.edu" required>
+            </div>
+          </div>
+          <div class="form-row button-row">
+            <input type="submit" value="Add to Register">
+          </div>
+        </form>
+      </div>
+      <div class="form-container" id="removeForm" style="display:none;">
+        <h3>Remove User from Register</h3>
+        <form method="POST" action="{{ url_for('delete_register') }}">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="idNumDelete">ID#:</label>
+                    <input type="text" id="idNumDelete" name="ID#" placeholder="Enter ID to remove" required>
+                </div>
+                <div class="form-group">
+                    <label for="plateNumDelete">Plate#:</label>
+                    <input type="text" id="plateNumDelete" name="Plate#" placeholder="ABC1354" required>
+                </div>
+                <div class="form-group">
+                    <label for="stateDelete">State:</label>
+                    <input type="text" id="stateDelete" name="State" placeholder="Pennsylvania" required>
+                </div>
+            </div>
+            <div class="form-row button-row">
+                <input type="submit" value="Remove from Register">
+              </div>
+        </form>
+    </div>
+
+            <div class="form-container" id="extensionForm" style="display:none;">
+        <h3>Remove User from Register</h3>
+        <form method="POST" action="{{ url_for('register_extension') }}">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="idNumExtend">ID#:</label>
+                    <input type="text" id="idNumExtend" name="ID#" placeholder="Enter ID to Extend" required>
+                </div>
+                <div class="form-group">
+                    <label for="plateNumExtend">Plate#:</label>
+                    <input type="text" id="plateNumExtend" name="Plate#" placeholder="ABC1354" required>
+                </div>
+                <div class="form-group">
+                    <label for="stateExtend">State:</label>
+                    <input type="text" id="stateExtend" name="State" placeholder="Pennsylvania" required>
+                </div>
+                 <div class="form-group">
+                    <label for="ExtendDate">Extension Date:</label>
+                    <input type="text" id="ExtendDate" name="ExtendDate" placeholder="2024-12-25" required>
+                </div>
+            </div>
+            <div class="form-row button-row">
+                <input type="submit" value="Add Extension to Register">
+              </div>
+        </form>
+    </div>
+    <div class="form-container" id="searchForm" style="display:none;">
+        <h3>Search Database</h3>
+        <form method="GET" action="{{ url_for('database') }}">
+            <div class="form-row">
+                <div class="form-group full-width">
+                    <label for="searchQuery">Search:</label>
+                    <input type="text" id="searchQuery" name="search_query" placeholder="Enter search query">
+                </div>
+            </div>
+            <div class="form-row button-row">
+                <input type="submit" value="Search">
+              </div>
+        </form>
+    </div>
+            {% endif %}
+        </article>
+    </main>
+        <script>
+            let slideIndex = 0;
+            const slides = document.getElementsByClassName('backgroundSlide');
+            const totalSlides = slides.length;
+            
+            setInterval(() => {
+              // Set all slides to be transparent
+              for (let slide of slides) {
+                slide.style.opacity = 0;
+              }
+              
+              // Increment the slide index
+              slideIndex = (slideIndex + 1) % totalSlides;
+              
+              // Show the next slide
+              slides[slideIndex].style.opacity = 1;
+            }, 5000); // Change image every 5000 milliseconds (5 seconds)
+            </script>
+    <script>
+    function getCurrentView() {
+        // Check if 'view' parameter is present in the URL
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get('view');
+    }
+    
+   function toggleView() {
+        var isChecked = document.getElementById('viewToggle').checked;
+        var viewType = isChecked ? 'unregistered' : 'registered';
+        var url = "{{ url_for('database') }}?view=" + viewType;
+        var searchQuery = new URLSearchParams(window.location.search).get('search_query');
+
+        if (searchQuery){
+            url += "&search_query=" + encodeURIComponent(searchQuery);
+        }
+
+        window.history.pushState({}, '', url); // Update URL without reloading
+        showTable(viewType); // Show the appropriate table based on the view
+    }
+
+    function showTable(viewType) {
+        if (viewType === 'unregistered') {
+            document.getElementById('registeredTable').style.display = 'none';
+            document.getElementById('unregisteredTable').style.display = 'block';
+        } else {
+            document.getElementById('registeredTable').style.display = 'block';
+            document.getElementById('unregisteredTable').style.display = 'none';
+        }
+    }
+
+    window.onload = function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const currentView = urlParams.get('view');
+        if (currentView === 'unregistered') {
+            document.getElementById('viewToggle').checked = true;
+        }
+
+        hideAllForms();
+        var message = "{{ get_flashed_messages() }}";
+        if (message.includes('add')) {
+            toggleForm('addForm');
+        } else if (message.includes('delete')) {
+            toggleForm('removeForm');
+        } else if (message.includes('extension')){
+            toggleForm('extensionForm');
+        } else if (message.includes('search')) {
+            toggleForm('searchForm');
+        }
+        showTable(currentView);
+    };
+    
+    
+    function hideAllForms() {
+        document.getElementById('addForm').style.display = 'none';
+        document.getElementById('removeForm').style.display = 'none';
+        document.getElementById('extensionForm').style.display = 'none';
+        document.getElementById('searchForm').style.display = 'none';
+    }
+    
+    function toggleForm(formId) {
+        hideAllForms();
+        document.getElementById(formId).style.display = 'block';
+    }
+    
+    </script>
+    
+    
+    </body>
+    </html>
+    
