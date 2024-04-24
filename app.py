@@ -1,156 +1,129 @@
 from flask import Flask, request, render_template, send_from_directory, redirect, url_for
-from database import load_all_registered_from_db, add_register_to_db
-import easyocr
-import cv2
-import numpy as np
-import io
-import os
-from datetime import datetime
+from database import (load_all_registered_from_db, add_register_to_db, delete_register_from_db,
+                      load_all_unregistered_from_db, database_search_any, extend_register_from_db)
+from flask import session, flash, redirect, request, g, url_for
+from functools import wraps
+from flask import get_flashed_messages
+
+ADMIN_EMAIL = 'jmt6265@psu.edu'
+ADMIN_PASSWORD = 'admin123'
 
 app = Flask(__name__)
-
-# Initialize EasyOCR reader
-reader = easyocr.Reader(['en'])
-
-
-@app.route('/')
-def home():
-    return render_template('index.html')
-
-
-@app.route('/update2')
-def update2():
-    return render_template('update2.html')
-
-
-@app.route('/about')
-def about():
-    return render_template('about.html')  # Assuming you have an 'about.html' template
+app.secret_key = 'your_secret_key'
 
 
 @app.route('/database')
 def database():
-    data = load_all_registered_from_db()
-    return render_template('database.html', data=data)
+    # Determine the view type from the URL parameter or default to 'registered'
+    view_type = request.args.get('view')
+    search_query = request.args.get('search_query', None)
+
+    # If there is a search query, perform the search regardless of the view type
+    if search_query:
+        data1 = database_search_any(search_query)
+        print("Search results:", data1)
+    else:
+        # Load registered data
+        data1 = load_all_registered_from_db()
+        print("Registered data")
+
+        data2 = load_all_unregistered_from_db()
+        print("Unregistered data")
+
+    is_admin = session.get('is_admin', False)
+    return render_template('database.html', data1=data1, data2=data2, is_admin=is_admin, view=view_type)
 
 
-@app.route('/demo')
-def demo():
-    # Get the processed image and other details if they are present in the query parameters
-    processed_image = request.args.get('processed_image', None)
-    plate_number = request.args.get('plate_number', None)
-    state_name = request.args.get('state', None)
-
-    # Render the page with the upload form and include the processed image if it's present
-    return render_template('demo.html', processed_image=processed_image,
-                           plate_number=plate_number, state_name=state_name)
-
-
-@app.route('/changelog')
-def changelog():
-    # Your logic to fetch changelog entries
-    return render_template('changelog.html')  # Make sure 'changelog.html' exists in your templates directory
+@app.route('/', methods=['GET', 'POST'])
+def login():
+    error = None
+    if request.method == 'POST':
+        email = request.form['login']
+        password = request.form['password']
+        if email == ADMIN_EMAIL and password == ADMIN_PASSWORD:
+            session['logged_in'] = True
+            session['is_admin'] = True  # Set admin flag
+            return redirect(url_for('database'))
+        else:
+            error = 'Invalid credentials. Please try again.'
+    return render_template('login.html', error=error)
 
 
-@app.route('/uploader', methods=['POST'])
-def upload_file():
-    try:
-        if request.method == 'POST':
-            file = request.files['image']
-            if file:
-                in_memory_file = io.BytesIO()
-                file.save(in_memory_file)
-                data = np.frombuffer(in_memory_file.getvalue(), dtype=np.uint8)
-                img = cv2.imdecode(data, cv2.IMREAD_COLOR)
-
-                if img is None:
-                    raise ValueError("Image decoding failed.")
-
-                # Perform OCR and process the image
-                ocr_results = reader.readtext(img, detail=1)
-
-                # Initialize variables for the largest bounding box
-                largest_area = 0
-                plate_number = ""  # Variable to store the plate number
-                mask = np.zeros_like(img)  # Create a black mask of the same size as the image
-
-                # Find the largest bounding box and fill the mask
-                for detection in ocr_results:
-                    if detection[2] > 0.2:  # Confidence threshold
-                        top_left = tuple([int(val) for val in detection[0][0]])
-                        bottom_right = tuple([int(val) for val in detection[0][2]])
-                        area = (bottom_right[0] - top_left[0]) * (bottom_right[1] - top_left[1])
-
-                        if area > largest_area:
-                            largest_area = area
-                            plate_number = detection[1]
-                            cv2.rectangle(mask, top_left, bottom_right, (255, 255, 255), -1)
-
-                # Apply the mask to the original image
-                result = cv2.bitwise_and(img, mask)
-
-                # Save the processed image
-                processed_image_path = 'processed_image.jpg'
-                cv2.imwrite(os.path.join('static', processed_image_path), result)
-
-                # Find the state name
-                all_texts = " ".join([detection[1] for detection in ocr_results]).strip().upper()
-                state_name = find_state_name(all_texts)
-
-                # Redirect to the upload page with the processed image path
-                # and any additional information you want to display
-                return redirect(url_for('demo', processed_image=processed_image_path,
-                                        plate_number=plate_number,
-                                        state=state_name if state_name else "No state found"))
-
-    except Exception as e:
-        print(f"An error occurred: {e}")
-        return f"An error occurred: {e}"
+@app.route('/logout')
+def logout():
+    session.pop('logged_in', None)
+    session.pop('is_admin', None)
+    flash('You have been logged out.')
+    return redirect(url_for('login'))
 
 
-def find_state_name(input_string):
+@app.route('/admin_dashboard')
+def admin_dashboard():
+    # Check if user is logged in
+    if not session.get('logged_in'):
+        # Not logged in, redirect to login page
+        return redirect(url_for('login'))
+    # Logged in, render admin dashboard
+    return 'Welcome to the admin dashboard!'
 
-    listofstates = [
-        "ALABAMA", "ALASKA", "ARIZONA", "ARKANSAS", "CALIFORNIA",
-        "COLORADO", "CONNECTICUT", "DELAWARE", "FLORIDA", "GEORGIA",
-        "HAWAII", "IDAHO", "ILLINOIS", "INDIANA", "IOWA",
-        "KANSAS", "KENTUCKY", "LOUISIANA", "MAINE", "MARYLAND",
-        "MASSACHUSETTS", "MICHIGAN", "MINNESOTA", "MISSISSIPPI", "MISSOURI",
-        "MONTANA", "NEBRASKA", "NEVADA", "NEW HAMPSHIRE", "NEW JERSEY",
-        "NEW MEXICO", "NEW YORK", "NORTH CAROLINA", "NORTH DAKOTA", "OHIO",
-        "OKLAHOMA", "OREGON", "PENNSYLVANIA", "RHODE ISLAND", "SOUTH CAROLINA",
-        "SOUTH DAKOTA", "TENNESSEE", "TEXAS", "UTAH", "VERMONT",
-        "VIRGINIA", "WASHINGTON", "WEST VIRGINIA", "WISCONSIN", "WYOMING"
-    ]
 
-    # Remove a substring from the sting read from the plate
-    def remove_substring(original_string, substring_to_remove):
-        return original_string.replace(substring_to_remove, '')
+@app.template_filter('formatdate')
+def format_date_filter(value, format='%Y-%m-%d'):
+    """Custom Jinja2 filter to format datetime objects."""
+    if value is None:
+        return ""
+    return value.strftime(format)
 
-    # Use a loop to see if a stat is in the string
-    for state in listofstates:
-        if state in input_string:
-            matchingState = state
-            # Take that state name out (so it is not confused for a plate number)
-            input_string = remove_substring(input_string, matchingState)
-
-            # Return the rest of the string without the state and the state separately
-            return matchingState
-
-    # If no state found return none/null
-    return None
 
 @app.route('/AddRegister', methods=['POST', 'GET'])
 def register():
+    if not session.get('logged_in'):
+        # If not logged in, redirect to the login page
+        return redirect(url_for('login'))
+
     if request.method == 'POST':
         data = request.form
         add_register_to_db(data)
+        flash("Registration added successfully.")  # Give feedback to the user that the operation was successful
+
     data = load_all_registered_from_db()
-    return render_template('database.html',  data=data)
+    is_admin = session.get('is_admin', False)  # Fetch admin status from the session
+    return render_template('database.html', data=data, is_admin=is_admin, get_flashed_messages=get_flashed_messages)
+
+
+@app.route('/DeleteRegister', methods=['POST'])
+def delete_register():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+
+    data = request.form
+    message = delete_register_from_db(data)
+    if message == "Person Not Registered":
+        flash("Person Not Registered")
+    else:
+        flash("Person Successfully Deleted")
+    return redirect(url_for('database'))
+
+
+@app.route('/ExtentionRegister', methods=['POST', 'GET'])
+def register_extension():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        data = request.form
+        extend_register_from_db(data)
+        flash("Registration Extension successful.")  # Give feedback to the user that the operation was successful
+
+    data = load_all_registered_from_db()
+    is_admin = session.get('is_admin', False)  # Fetch admin status from the session
+    return render_template('database.html', data=data, is_admin=is_admin, get_flashed_messages=get_flashed_messages)
+
 
 @app.route('/static/<filename>')
 def static_file(filename):
     return send_from_directory('static', filename)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
