@@ -9,7 +9,7 @@ Sponsors: None
 
 Faculty Advisor: Truong Tran
 
-Technologies: Microsoft SQL Server, Android Jetpack Compose, Jupyter Notebook, CameraX, YOLOV8, Google ML Kit Text Recognition, FastApi, Flask
+Technologies: Microsoft SQL Server, Android Jetpack Compose, Jupyter Notebook, CameraX, YOLOv8, Google ML Kit Text Recognition, FastApi, Flask
 
 Problem Statement:
 
