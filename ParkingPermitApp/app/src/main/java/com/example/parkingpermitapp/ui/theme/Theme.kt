@@ -14,19 +14,20 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
+import androidx.compose.ui.graphics.Color
 
 
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+    primary = PennStatePlatesPrimaryColor,
+    secondary = PennStatePlatesPrimaryColor,
+    tertiary = PennStatePlatesPrimaryColor
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
+    primary = PennStatePlatesPrimaryColor,
+    secondary = PennStatePlatesPrimaryColor,
+    tertiary = PennStatePlatesPrimaryColor
 
 
 

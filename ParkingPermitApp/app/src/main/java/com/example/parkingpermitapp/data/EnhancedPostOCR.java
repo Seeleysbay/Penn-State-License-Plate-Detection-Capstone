@@ -5,19 +5,20 @@ import android.util.Log;
 import com.google.mlkit.vision.text.Text;
 import com.example.parkingpermitapp.domain.LevenshteinResult;
 import org.apache.commons.text.similarity.LevenshteinDistance;
+import java.util.regex.Pattern;
 
 import java.util.HashMap;
 import java.util.List;
 
-//********************************************************
-// Generic class to evaluate baseline OCR results.       *
-// Extracts the plate code by finding largest bounding   *
-// box line. Returns a state only if an exact match for  *
-// a state is found. No error corrections/spell checking *
-// are performed.                                        *
-//********************************************************
+//***************************************************************
+// Class to evaluate baseline OCR results and correct errors.   *
+// Extracts the plate code by finding largest bounding          *
+// box line. Returns a state only if an exact match for         *
+// a state is found. No error corrections/spell checking        *
+// are performed.                                               *
+//***************************************************************
 
-public class GenericOCR {
+public class EnhancedPostOCR {
 
     private String[] states = {
             "PENNSYLVANIA", "MARYLAND", "JERSEY", "YORK", "MYFLORIDA.COM", "HAMPSHIRE", "MEXICO", "CAROLINA", "DAKOTA",
@@ -38,7 +39,7 @@ public class GenericOCR {
         int largestHeight = 0; // To find the line bounding box with greatest height.
         String plateNumber = "";
         String state = "";
-        boolean notFound = true;
+        boolean notFound = true; // flag for whether or not state name has been found
         String elementPrefix = "";
         LevenshteinResult mostAccurateState = new LevenshteinResult(1000, "", "");
 
@@ -70,7 +71,7 @@ public class GenericOCR {
                             mostAccurateState.setDistance(temp.getDistance());
                             mostAccurateState.setState(temp.getState());
                             mostAccurateState.setOriginalInference(temp.getOriginalInference());
-                            if (mostAccurateState.getDistance() == 0) notFound = false;
+                            if (mostAccurateState.getDistance() == 0) notFound = false; //exact match found then stop
                         }
                     }
                 }
@@ -79,10 +80,41 @@ public class GenericOCR {
         Log.d("Spell Check:", "Natural OCR: " + mostAccurateState.getOriginalInference());
         Log.d("Spell Check:", "retval. score: " + mostAccurateState.getDistance());
         Log.d("Spell Check:", "retval. state: " + mostAccurateState.getState());
-        if (mostAccurateState.getDistance() == 0) { // Distance == 0 requires an exact match.
+        if (mostAccurateState.getDistance() < 5) { // Distance == 0 requires an exact match.
             state = state + mostAccurateState.getState();
         }
-        state = getStateCode(state); // Convert state to two letter abbreviation, if no state found -> ""
+        int distance = mostAccurateState.getDistance();
+        state = getStateCode(state); //Convert state to two letter abbreviation, if no state found -> ""
+        //apply error mapping for state name. Ideally, array of hashmaps, one for each state, mapping
+        //that state name and its levenshtein distance to the correct state if applicable.
+        if(state.equals("IN") || state.equals("IA") || state.equals("AK") || state.equals("ME") && distance >= 3){
+            state = "LA";
+        }
+
+        //Check if plate number matches state Regex
+        //Pattern stateRegex = StateRegex.getRegex(state);
+
+        //Ideally, extensive data based error corrections would be performed here
+        //Very basic corrections due to lack of time courtesy of Dr. Na's CMPSC470 HW5
+        if(plateNumber.charAt(plateNumber.length()-1) == ')' || plateNumber.charAt(plateNumber.length()-1) == ','
+           || plateNumber.charAt(plateNumber.length()-1) == '.'){
+            plateNumber = plateNumber.substring(0, plateNumber.length() - 1);
+        }
+        if(state.equals("PA")){
+            if(plateNumber.length() > 8){
+                plateNumber = plateNumber.substring(0, plateNumber.length() - 1);
+            }
+            if(plateNumber.charAt(3) != '-'){
+                StringBuilder sb = new StringBuilder(plateNumber);
+                sb.setCharAt(3, '-');
+                plateNumber = sb.toString();
+            }
+        }
+        //Ideally, extensive data based error corrections would be performed here
+        //Very basic corrections due to lack of time
+
+
+
         return plateNumber + "_" + state;
     }
     private LevenshteinResult checkStateAccuracy(String element) {
@@ -91,14 +123,36 @@ public class GenericOCR {
         int score;
 
         for (int i = 0; i < states.length; i++) {
-            score = distance.apply(element, states[i]);
-            if (score < retval.getDistance()) {
-                retval.setDistance(score);
-                retval.setState(states[i]);
-                retval.setOriginalInference(element);
+            if(element.length() > 3 && excludeFromStateName(element)) {
+                score = distance.apply(element, states[i]);
+                if (score < retval.getDistance()) {
+                    retval.setDistance(score);
+                    retval.setState(states[i]);
+                    retval.setOriginalInference(element);
+                }
             }
         }
         return retval;
+    }
+    //map to exclude commonly found words on license plates from levenshtein distance state name correction
+    private Boolean excludeFromStateName(String element){
+        HashMap<String, Boolean> excludeList = new HashMap<>();
+        excludeList.put("STATE", false);
+        excludeList.put("NATURAL", false);
+        excludeList.put("YEARS", false);
+        excludeList.put("1812", false);
+        excludeList.put("150", false);
+        excludeList.put("LAKES", false);
+        excludeList.put("DMV.CA-GOV", false);
+        excludeList.put("DMV.CA.GOV", false);
+        excludeList.put("DMV.CA-GO", false);   
+        excludeList.put("SESQUICENTENNIAL-", false);
+        excludeList.put("visit", false);
+        excludeList.put("visitPA", false);
+        excludeList.put("visitPA.com", false);
+        excludeList.put(".com", false);
+
+        return excludeList.getOrDefault(element, true);
     }
 
     private String getStateCode(String state){

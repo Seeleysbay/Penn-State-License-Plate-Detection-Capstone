@@ -46,9 +46,12 @@ class TextExtraction(private val bitmap: Bitmap) {
         recognizer.process(image)
             .addOnSuccessListener { result ->
                 //result contains all text in image, output will contain text after post OCR processing
-                val generic = GenericOCR();
-                val output = generic.getOutPutText(result)
-                //val output = getOutPutText(result)
+                //val generic = GenericOCR();
+                //val output = generic.getOutPutText(result)
+
+                val postOCR = EnhancedPostOCR();
+                val output = postOCR.getOutPutText(result)
+
                 onResult(output)
             }
             .addOnFailureListener { e ->
@@ -77,7 +80,7 @@ class TextExtraction(private val bitmap: Bitmap) {
     // the state in upper case.                              *
     // For API purposes, might make a seperate class for     *
     // this function, easier for other projects to use w/    *
-    // ML Kit                                                *
+    // ML Kit(Replaced with OCR classes)                      *
     //********************************************************
     private fun getOutPutText( result: Text): String {
         var largestHeight = 0   // to find the line bounding box with greatest height
@@ -130,7 +133,7 @@ class TextExtraction(private val bitmap: Bitmap) {
         Log.d("Spell Check:", "Natural OCR: ${mostAccurateState.originalInference}")
         Log.d("Spell Check:", "retval. score: ${mostAccurateState.distance}")
         Log.d("Spell Check:", "retval. state: ${mostAccurateState.state}")
-        if(mostAccurateState.distance == 0){ // distance == 0 requires an exact match, distance == 1 allows for 1 char insert/delete/substitution, etc.
+        if(mostAccurateState.distance <= 2){ // distance == 0 requires an exact match, distance <= 1 allows for 1 char insert/delete/substitution, etc.
             state = state + mostAccurateState.state
         }
         return plateNumber + " " + state

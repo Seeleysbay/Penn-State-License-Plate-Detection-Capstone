@@ -25,7 +25,9 @@ import androidx.compose.ui.layout.VerticalAlignmentLine
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.parkingpermitapp.ui.theme.Navy
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.RadioButtonDefaults
+import com.example.parkingpermitapp.ui.theme.PennStatePlatesPrimaryColor
 
 @Composable
 fun RadioButtons(submitBatch: MutableState<Boolean>, clearBatch: MutableState<Boolean>, plateCount: MutableState<Int>,
@@ -50,24 +52,26 @@ fun RadioButtons(submitBatch: MutableState<Boolean>, clearBatch: MutableState<Bo
             ) {
                 RadioButton(
                     selected = (text == selectedOption),
-                    onClick = { onOptionSelected(text) }
+                    onClick = { onOptionSelected(text) },
+                    colors = RadioButtonDefaults.colors(unselectedColor = PennStatePlatesPrimaryColor,
+                        selectedColor = PennStatePlatesPrimaryColor )
                 )
                 Text(
                     modifier = Modifier.padding(start = 0.dp),
                     text = text,
                     style = MaterialTheme.typography.titleMedium,
-                    color = Color(red = 17, green = 85, blue = 204, alpha = 255),
+                    color = PennStatePlatesPrimaryColor,
                     fontSize = 17.sp,
                     overflow = TextOverflow.Ellipsis
 
                 )
                 if(i==0) {Spacer(modifier = Modifier.fillMaxWidth(0.1f))}
-                else{ Spacer(modifier = Modifier.fillMaxWidth(0.27f))}
+                else{ Spacer(modifier = Modifier.fillMaxWidth(0.265f))}
                 Text(
                     text = textDisplay[i],
                     modifier = Modifier.padding(10.dp),
                     style = MaterialTheme.typography.titleMedium,
-                    color = Color(red = 17, green = 85, blue = 204, alpha = 255),
+                    color = PennStatePlatesPrimaryColor,
                     fontSize = 17.sp
                 )
             }
@@ -78,7 +82,11 @@ fun RadioButtons(submitBatch: MutableState<Boolean>, clearBatch: MutableState<Bo
                 Button(
                     onClick = { clearBatch.value = true },
                     modifier = Modifier
-                        .padding(10.dp)
+                        .padding(10.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = PennStatePlatesPrimaryColor,  // Background color of the button
+                        contentColor = Color.White
+                    )
 
                 ) {
                     Text("Clear Batch")
@@ -86,7 +94,11 @@ fun RadioButtons(submitBatch: MutableState<Boolean>, clearBatch: MutableState<Bo
                 Button(
                     onClick = { submitBatch.value = true },
                     modifier = Modifier
-                        .padding(10.dp)
+                        .padding(10.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = PennStatePlatesPrimaryColor,
+                        contentColor = Color.White
+                )
 
                 ) {
                     Text("Batch Search")

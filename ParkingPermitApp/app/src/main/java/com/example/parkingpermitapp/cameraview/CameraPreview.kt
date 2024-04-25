@@ -59,23 +59,18 @@ fun AppFunctions(modifier: Modifier = Modifier) {
     var plates = remember {mutableListOf<String>()} //list containing plates from batch scan, parallel with states
     var states = remember { mutableListOf<String>() }//list containing states from batch scan, parallel with plates
     val imageAnalysisExecutor = Executors.newSingleThreadExecutor()
-    val cameraPreviewWidth = 360 //width of the camera preview in app display, applied in .dp
-    val cameraPreviewHeight = 360 //height of the camera preview in app display, applied in .dp
+    val cameraPreviewWidth = 360 //width of the camera preview in app display, applied in .dp, not currently used
+    val cameraPreviewHeight = 360 //height of the camera preview in app display, applied in .dp, not currently used
     //Add URL to your API here
     val platesApi =
         RetrofitClient.getClient("https://pennstateocr-api.azurewebsites.net/").create(
             PlatesAPI::class.java
         )
+    val apiKey = "bc5300a645ed994e494e70e31fd11b91eb685ca139a1d50eab1e447d61da2be2" //API key for PlatesApi
 
     Column(modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally) {
-        /*Text(
-            text = "Penn State Plates",
-            modifier = Modifier.padding(5.dp),
-            style = MaterialTheme.typography.bodyMedium,
-            color = Navy,
-            fontSize = 20.sp
-        )*/
+
         RadioButtons(submitBatch, clearBatch, plateCount, radioOptions, selectedOption = selectedOption, onOptionSelected = onOptionSelected)
 
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -91,7 +86,7 @@ fun AppFunctions(modifier: Modifier = Modifier) {
             //Get information on an individual plate
             if (ocrResultState.value.isNotEmpty() && selectedOption == radioOptions[0]) {
                 isAnalysisActive.value = false
-                DisplayResult(ocrResultState = ocrResultState, platesApi) {
+                DisplayResult(ocrResultState = ocrResultState, platesApi, apiKey) {
                     // trailing lambda, when close button is clicked from DisplayResult,
                     // the following values are set
                     ocrResultState.value = ""
@@ -122,7 +117,7 @@ fun AppFunctions(modifier: Modifier = Modifier) {
             //submit batch to API
             if(submitBatch.value == true && plates.size != 0){
                 isAnalysisActive.value = false
-                DisplayBatchResult(plates, states, platesApi) {
+                DisplayBatchResult(plates, states, platesApi, apiKey) {
                     // trailing lambda, when close button is clicked from DisplayResult,
                     // the following values are set
                     submitBatch.value = false

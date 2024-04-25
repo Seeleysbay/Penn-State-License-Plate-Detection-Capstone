@@ -5,12 +5,17 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -37,7 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.parkingpermitapp.network.DriverInfo
 import com.example.parkingpermitapp.network.PlatesAPI
-import com.example.parkingpermitapp.network.RetrofitClient
+import com.example.parkingpermitapp.ui.theme.PennStatePlatesPrimaryColor
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.Callback
@@ -48,7 +53,7 @@ import retrofit2.Callback
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DisplayBatchResult(plates: MutableList<String>, states: MutableList<String>, platesApi: PlatesAPI, onClose: () -> Unit) {
+fun DisplayBatchResult(plates: MutableList<String>, states: MutableList<String>, platesApi: PlatesAPI, apiKey: String, onClose: () -> Unit) {
     var apiResponse by remember { mutableStateOf<String?>(null) } //Holds API query results
     val notFoundPlates = remember { mutableStateListOf<String>() }
     val notFoundStates = remember { mutableStateListOf<String>() }
@@ -65,7 +70,7 @@ fun DisplayBatchResult(plates: MutableList<String>, states: MutableList<String>,
     }
 
     fun searchPlate(state: String, plate: String) {
-        val call = platesApi.queryLicensePlate(state, plate)
+        val call = platesApi.queryLicensePlate(state, plate, apiKey)
         call.enqueue(object : Callback<DriverInfo> {
             override fun onResponse(call: Call<DriverInfo>, response: Response<DriverInfo>) {
                 if (response.isSuccessful) {
@@ -114,15 +119,30 @@ fun DisplayBatchResult(plates: MutableList<String>, states: MutableList<String>,
                 LazyColumn(modifier = Modifier.fillMaxSize().weight(1f).padding(16.dp)) {
                     itemsIndexed(notFoundPlates) { index, plate ->
                         val state = notFoundStates[index]
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Text(text = "$plate  $state", color = Color.Black)
+                        Row(verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.fillMaxWidth()) {
+                            Text(
+                                text = plate,
+                                color = Color.Black,
+                                modifier = Modifier.weight(1f)
+                            )
+                            Spacer(modifier = Modifier.width(2.dp)) // Adjust spacing between columns as needed
+                            Text(
+                                text = state,
+                                color = Color.Black,
+                                modifier = Modifier.width(IntrinsicSize.Min).align(Alignment.CenterVertically)
+                            )
                         }
                     }
                 }
                 Button(
                     onClick = onClose,
                     modifier = Modifier
-                        .padding(16.dp)
+                        .padding(16.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = PennStatePlatesPrimaryColor,
+                        contentColor = Color.White
+                    )
 
                 ) {
                     Text("Close")
