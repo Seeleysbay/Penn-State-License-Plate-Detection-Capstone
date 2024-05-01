@@ -80,38 +80,31 @@ public class EnhancedPostOCR {
         Log.d("Spell Check:", "Natural OCR: " + mostAccurateState.getOriginalInference());
         Log.d("Spell Check:", "retval. score: " + mostAccurateState.getDistance());
         Log.d("Spell Check:", "retval. state: " + mostAccurateState.getState());
-        if (mostAccurateState.getDistance() < 5) { // Distance == 0 requires an exact match.
+        if (mostAccurateState.getDistance() < 3) { // Distance == 0 requires an exact match.
             state = state + mostAccurateState.getState();
         }
         int distance = mostAccurateState.getDistance();
         state = getStateCode(state); //Convert state to two letter abbreviation, if no state found -> ""
-        //apply error mapping for state name. Ideally, array of hashmaps, one for each state, mapping
-        //that state name and its levenshtein distance to the correct state if applicable.
-        if(state.equals("IN") || state.equals("IA") || state.equals("AK") || state.equals("ME") && distance >= 3){
-            state = "LA";
-        }
 
-        //Check if plate number matches state Regex
-        //Pattern stateRegex = StateRegex.getRegex(state);
-
-        //Ideally, extensive data based error corrections would be performed here
-        //Very basic corrections due to lack of time courtesy of Dr. Na's CMPSC470 HW5
-        if(plateNumber.charAt(plateNumber.length()-1) == ')' || plateNumber.charAt(plateNumber.length()-1) == ','
-           || plateNumber.charAt(plateNumber.length()-1) == '.'){
-            plateNumber = plateNumber.substring(0, plateNumber.length() - 1);
-        }
-        if(state.equals("PA")){
-            if(plateNumber.length() > 8){
+        //apply minor post OCR processing
+        if(plateNumber.length() > 3) {
+            if (!Character.isLetterOrDigit(plateNumber.charAt(plateNumber.length() - 1))) {
                 plateNumber = plateNumber.substring(0, plateNumber.length() - 1);
             }
-            if(plateNumber.charAt(3) != '-'){
-                StringBuilder sb = new StringBuilder(plateNumber);
-                sb.setCharAt(3, '-');
-                plateNumber = sb.toString();
+            if (!Character.isLetterOrDigit(plateNumber.charAt(0))) {
+                plateNumber = plateNumber.substring(1);
+            }
+            if (state.equals("PA")) {
+                if (plateNumber.length() > 8) {
+                    plateNumber = plateNumber.substring(0, plateNumber.length() - 1);
+                }
+                if (!Character.isLetterOrDigit(plateNumber.charAt(3))) {
+                    StringBuilder sb = new StringBuilder(plateNumber);
+                    sb.setCharAt(3, '-');
+                    plateNumber = sb.toString();
+                }
             }
         }
-        //Ideally, extensive data based error corrections would be performed here
-        //Very basic corrections due to lack of time
 
 
 
