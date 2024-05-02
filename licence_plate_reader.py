@@ -1,18 +1,7 @@
-import easyocr
-import cv2
+Copyright 2024 PSPlates Group
 
-def read_license_plate(image_path):
-    reader = easyocr.Reader(['en'])  # Initialize the EasyOCR reader
-    image = cv2.imread(image_path)   # Read the image file
-    results = reader.readtext(image) # Use EasyOCR to read text from the image
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
-    plate_numbers = []
-    for (bbox, text, prob) in results:
-        plate_numbers.append(text)
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
-    return plate_numbers
-
-# Example usage
-image_path = 'Michigan.webp'
-plate_numbers = read_license_plate(image_path)
-print("Recognized License Plate Numbers:", plate_numbers)
+THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
